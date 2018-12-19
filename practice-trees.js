@@ -1,0 +1,23 @@
+
+const treeTraversal = (tree, myMethod) => {
+  let results = [];
+
+  if (myMethod === 'inOrder') {
+    results = tree.inOrder();
+  }
+  else if (myMethod === 'preOrder') {
+    results = tree.preOrder();
+  } 
+  else if (myMethod === 'postOrder') {
+    results = tree.postOrder();
+  } 
+  else if (myMethod === 'levelOrder') {
+    results = tree.levelOrder();
+  } 
+  else {
+    return null;
+  }
+  return results;
+}
+
+module.exports = treeTraversal;
