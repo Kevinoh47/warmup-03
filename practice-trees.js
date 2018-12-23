@@ -1,3 +1,27 @@
+const treeTraversal1222 = (tree, myMethod) => {
+  let results = [];
+
+  switch (myMethod) 
+   {
+    case 'inOrder':
+      results = tree.inOrder();
+      break;
+    case 'preOrder':
+      results = tree.preOrder();
+      break;
+    case 'postOrder':
+      results = tree.postOrder();
+      break;
+    case 'levelOrder':
+      results = tree.levelOrder();
+      break;
+    default:
+      results = null;
+      break;
+   }
+  
+  return results;
+}
 
 const treeTraversal = (tree, myMethod) => {
   let results = [];
@@ -20,4 +44,4 @@ const treeTraversal = (tree, myMethod) => {
   return results;
 }
 
-module.exports = treeTraversal;
+module.exports = {treeTraversal1222, treeTraversal};
