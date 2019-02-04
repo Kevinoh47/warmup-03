@@ -108,6 +108,7 @@ class LinkedList {
     return this;
   }
 
+  // deletes the tail (e.g. pop).
   delete() {
     let current = (this.head) ? this.head : null;
     let previous;
@@ -133,6 +134,48 @@ class LinkedList {
     return current;
   }
 
+   // remove a node from the linked list
+  // Big O for time: O(n)
+  // Big O for space O(1)
+  remove(offset) {
+    let current = this.head;
+    let counter = 0;
+    let myPrevious;
+
+    if (offset >= 0 && offset <= this.length) {
+
+      // remove the head
+      if (current === this.head && counter === offset) {
+        this.head = current.next;
+        current.next = null;
+        this.length--;
+        return this;
+      }
+
+      // remove one from inside
+      while (current.next) {
+        if (counter === offset) {
+          myPrevious.next = current.next;
+          current.next = null;
+          this.length--;
+          return this;
+        }
+        myPrevious = current;
+        current = current.next;
+        counter++;
+      }
+      // removing the tail
+      if (!current.next && counter === offset) {
+        myPrevious.next = null;
+        this.tail = myPrevious;
+        this.length--;
+      }
+      return this;
+    } else {
+      return null; // should this throw an error instead?
+    }
+  }
+  
   // insert newValue immediately before the node containing value
   insertBefore(value, newValue) {
     let newNode = new Node(newValue);
