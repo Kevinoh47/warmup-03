@@ -1,10 +1,87 @@
 /** 
  * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
  */
-
  'use strict';
+ const LinkedList = require('../linked-list');
+
+   /**
+  * LINKED LISTS Q2) write a function that prints the values of a linked list in an array
+  */
+ 
+ console.log('\n ---write a function that prints the values of a linked list in an array .---\n');
+
+ let myLL3 = new LinkedList();
+ let myinput3 = [444, 777, 555, 999, 888, 1101, 333, 222, 47, 74, 47];
+ myinput3.map(e => myLL3.append(e));
+
+ let toArray = list => {
+
+  let myRecurse = (node, myArr) => {
+
+    myArr.push(node.value);
+
+    if(node.next) {
+      myRecurse(node.next, myArr)
+    }
+  }
+
+  let results = [];
+  myRecurse(list.head, results);
+  return results;
+ }
+
+ let myLLArr = toArray(myLL3);
+ console.log({myLLArr});
+
+  /**
+  * LINKED LISTS Q1) write a function prettyPrint() that recurses to print every value in a linked list
+  */
+ 
+ console.log('\n ---write a recursive function to print the values of a linked list .---\n');
+
+ let myLL2 = new LinkedList();
+ let myinput2 = [44, 77, 55, 99, 88, 101, 33, 22];
+ myinput2.map(e => myLL2.append(e));
+ let prettyPrint2 = ll => {
+
+   let myRecurse = node => {
+    console.log(node.value);
+    if(node.next) {
+      myRecurse(node.next)
+    }
+   }
+
+   myRecurse(ll.head);
+
+ }
+
+ prettyPrint2(myLL2);
+
+
+ /**
+  * LINKED LISTS Q0) write a function prettyPrint() that uses a while loop to print every value in a linked list
+  */
+ 
+ console.log('\n ---write a function to print the values of a linked list using a while loop. ---\n');
+
+ let myLL = new LinkedList();
+ let myinput = [56,6,17,88,9,947,0,1,14];
+ myinput.map(e => myLL.append(e));
+ let prettyPrint = ll => {
+   let current = ll.head;
+   while( current.next) {
+     console.log(current.value);
+     current = current.next;
+   }
+   console.log(current.value);
+ }
+
+ prettyPrint(myLL);
+
+
+
 /**
- * create a function called find that takes an array and a callback and uses reduce to return the first item in the array that the callback returns true
+ * Q5) create a function called find that takes an array and a callback and uses reduce to return the first item in the array that the callback returns true
  * 
  * NOTE i think array.filter would be more appropriate for this one.
  */
@@ -56,7 +133,14 @@ var sum2 = rockets.reduce((prevVal, elem) => { return prevVal + elem.launches}, 
 console.log({sum});
 console.log({sum2});
 
- console.log('\n ---practice using spread to manage disparte inputs to a function---\n');
+console.log('\n ---practice using spread to manage disparte inputs to a function---\n');
+
+function multiplier(...rest) {
+  let [a, b] = [...rest];
+  return a * b;
+}
+console.log('despite the extras, this example should be 20: ', multiplier(4,5,6,7));
+
 
 function logEach2(a, b, ...rest) {
   let myArr = [a, b, ...rest];
@@ -83,7 +167,7 @@ logEach("a", "b", "c", "d", "e", "f");
 console.log('\n ---function that when invoked calls the callback just once---\n');
 
  /**
-  * create a function called once that takes a callback and returns a function that when invoked will only call the callback the first time.
+  * Q4: create a function called once that takes a callback and returns a function that when invoked will only call the callback the first time.
   * 
   * ideas: 
   * 1) return an immediately invoked anonymous version of it.
@@ -116,7 +200,7 @@ console.log({results});
  console.log('\n ---curried add function---\n');
 /**
  * 
- * create a curied add function that returns a function that adds by a number each time
+ * Q1: create a curied add function that returns a function that adds by a number each time
  */
 
  var curriedAdd = (num1, num2) => {
@@ -174,7 +258,7 @@ var myName = myEmphasis('Dougie');
 
 console.log('\n ---recursively call callback ---\n');
  /**
-  * create a recursive function named loop that takes a count and a callback let loop = (count, callback) => ... and calls the callback count times
+  * Q.0: create a recursive function named loop that takes a count and a callback let loop = (count, callback) => ... and calls the callback count times
   */
 
   let loop = (count, callback) => {
