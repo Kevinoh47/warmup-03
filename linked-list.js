@@ -9,6 +9,13 @@ class LinkedList {
     this.length = 0;
   }
 
+  getLength() { return this.length;}
+  getHeadValue() {return this.head.value};
+  getSecond() { 
+    return (this.head.next !== undefined) ? this.head.next : 'false';
+  }
+  getTailValue() {return this.tail.value};
+
   // return the value of the nodethat is k from the END of the linked list
   ll_kth_from_end(k) {
     if (Number.isInteger(k) && k > -1) {
