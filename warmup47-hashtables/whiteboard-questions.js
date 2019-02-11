@@ -3,6 +3,7 @@
  */
 'use strict';
 const LinkedList = require('../linked-list');
+const Set = require('../set');
 
 let myLL3 = new LinkedList();
 let myinput3 = [444, 777, 555, 999, 888, 1101, 333, 222, 47, 74, 47, 333, 333];
@@ -11,71 +12,274 @@ myinput3.map(e => {
   myLL3.append(e);
 });
 
-console.log('myLL3 length: ', myLL3.length);
-console.log('myLL3 head: ', myLL3.head);
-console.log('myLL3 tail: ', myLL3.tail);
+// console.log('myLL3 length: ', myLL3.length);
+// console.log('myLL3 head: ', myLL3.head);
+// console.log('myLL3 tail: ', myLL3.tail);
 
-console.log('length: ', myLL3.getLength());
-console.log('head value: ', myLL3.getHeadValue());
-console.log('second node: ', myLL3.getSecond());
-console.log('tail value: ', myLL3.getTailValue());
+// console.log('length: ', myLL3.getLength());
+// console.log('head value: ', myLL3.getHeadValue());
+// console.log('second node: ', myLL3.getSecond());
+// console.log('tail value: ', myLL3.getTailValue());
 
+console.log('\n\n ---------------------------------------------------');
+console.log(' ---------------------------------------------------\n');
+
+console.log('---reverse a linked list version2 (preferred).---\n');
+let reverseList = list => {
+  var current = list.head;
+  var next = null;
+  var previous = null;
+  
+  while(current) {
+    // temp holding place for next. Should be null for current tail node.
+    next = current.next;
+    
+    // reverse the current direction
+    current.next = previous;
+
+    // prepping for next iteration
+    previous = current;
+
+    current = next;
+  }
+  list.tail = list.head;
+  list.head = previous;
+}
+
+let reverseMe2 = new LinkedList();
+[1,2,3,4,5,6,7].map(e => reverseMe2.append(e));
+
+console.log('before reversing: ', reverseMe2.iterator());
+console.log('old head: ', reverseMe2.getHeadValue());
+console.log('old tail: ', reverseMe2.getTailValue());
+
+reverseList(reverseMe2);
+
+console.log('after reversing: ', reverseMe2.iterator());
+console.log('new head: ', reverseMe2.getHeadValue());
+console.log('new tail: ', reverseMe2.getTailValue());
+
+// console.log('\n---reverse a linked list version1.---\n');
+// /**
+//  * Reverse a link list
+//  * 
+//  */
+
+//  let listReverser = list => {
+
+//    if (list.length < 2) {return }
+
+//    let first = list.head;
+//    let second = first.next;
+
+//    while(second) {
+//      let temp = second.next;
+//      second.next = first;
+//      first = second;
+//      second = temp;
+//    }
+
+//    list.head.next = null;
+//    list.tail = list.head;
+//    list.head = first;
+//  }
+
+//  let reverseMe = new LinkedList();
+//  [1,2,3,4,5,6,7].map(e => reverseMe.append(e));
+
+//  console.log('before reversing: ', reverseMe.iterator());
+
+//  listReverser(reverseMe);
+
+//  console.log('after reversing: ', reverseMe.iterator());
+  console.log(' \n\n---------------------------------------------------\n');
+
+/**
+ * Write a function that takes in a linked list and returns true if the list contains a cycle (a node points to a node behind it in the list)
+ */
+console.log('---write a test for an ouroboros linked list.---\n');
+console.log('the common approach here is called tortoise and hare algorithm. See http://www.thatjsdude.com/interview/linkedList.html#detectLoop')
+
+
+function detectLoop(list) {
+  let slow = list.head;
+  let fast = list.head;
+
+  while(slow && fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+
+    if (slow == fast) {
+      console.log('\nwhere loop is detected - not necessarily the actual start of the loop: ', slow.value, '\n'); 
+      return true;
+    }
+  }
+  return false;
+}
+ 
+let ouroborosTest1 = new LinkedList();
+[1,2,3,4,5].map(e => ouroborosTest1.append(e));
+
+console.log('our current tail: ', ouroborosTest1.tail);
+console.log('our current tail by chaining nexts: ',ouroborosTest1.head.next.next.next.next );
+console.log('head.next.next :', ouroborosTest1.head.next.next);
+
+
+console.log('First test for a loop should return false: ', detectLoop(ouroborosTest1));
+
+// now make it a loop manually. It is NODES not values!
+ouroborosTest1.head.next.next.next.next.next = ouroborosTest1.head.next.next;
+console.log('2nd test for a loop should return true: ', detectLoop(ouroborosTest1));
+
+/**
+ * Write a function that takes in a linked list and returns true if the list contains a cycle (a node points to a node behind it in the list)
+ */
+console.log(' \n\n---------------------------------------------------\n');
+console.log('---write a function that finds the beginning of a loop in a linked list.---\n');
+console.log('See http://www.thatjsdude.com/interview/linkedList.html#LoopStart')
+
+
+function findLoopStart(singleLinkedList) {
+  var slow = singleLinkedList.head;
+  var fast = singleLinkedList.head;
+
+  while (slow && fast) {
+    if(!fast.next) {
+      return false; // no loop
+    }
+    slow = slow.next;
+    fast = fast.next.next;
+
+    // we know there is a loop but haven't yet found the starting node.
+    if (slow == fast) {
+      slow = singleLinkedList.head; //reset slow to the beginning
+      while (slow !== fast) {
+        slow = slow.next;
+        fast = fast.next;
+      }
+      return slow;
+    }
+  }
+}
+
+console.log(findLoopStart(ouroborosTest1));
 
 /** LINKED LISTS Q6)
  * write splice for a linked list
  * the array splice method has input params for starting index, delete count, and an indeterminate number of inputs to add. If Delete Count is 0, you should have inputs and just shim them in. Splice operates on the given array.
 */
 
+console.log(' \n\n---------------------------------------------------\n');
+console.log('---added splice method based on below to the Linked List class.---\n');
+console.log('---version three: a LL method---\n');
+
+let testingLLSpliceMethod = new LinkedList();
+[100,110,120,130,200].map(e => testingLLSpliceMethod.append(e));
+console.log('initial LL: ', testingLLSpliceMethod.iterator());
+
+// an index = LL.length or greater returns null;
+testingLLSpliceMethod.splice(5, 0, 140,150,160,170,180,190);
+console.log('an index of LL.length or greater leaves LL as is: ', testingLLSpliceMethod.iterator());
+
+// put in the missing values:
+testingLLSpliceMethod.splice(3, 0, 140,150,160,170,180,190);
+
+console.log('LL after adding in missing values: ', testingLLSpliceMethod.iterator());
+
+// replace 1 element at index 4:
+testingLLSpliceMethod.splice(4, 1, 141);
+console.log('LL after replacing 140 with 141: ', testingLLSpliceMethod.iterator());
+
+// remove some index 4, 5, 6 (141, 150, 160):
+testingLLSpliceMethod.splice(4, 3, 142,152,162);
+
+console.log('LL after removing 141, 150 and 160 and replacing with 142, 152, 162: ', testingLLSpliceMethod.iterator());
+
+//console log just removing the first one:
+testingLLSpliceMethod.splice(0, 1);
+console.log('LL after removing thie FIRST one: ', testingLLSpliceMethod.iterator());
+
+//console log just removing the last one:
+testingLLSpliceMethod.splice(9, 1);
+console.log('LL after removing thie LAST one: ', testingLLSpliceMethod.iterator());
+
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('--- new InsertAfterIndex method added to LL class.---\n');
+
+let testingLLInsertAfterIndex = new LinkedList();
+[10,11,12,13,20].map(e => testingLLInsertAfterIndex.append(e));
+
+console.log('initial LL: ', testingLLInsertAfterIndex.iterator());
+
+console.log('an index of LL.length or greater returns null: ', testingLLInsertAfterIndex.insertAfterIndex(5, 47));
+
+testingLLInsertAfterIndex.insertAfterIndex(-1, 9);
+console.log('appended 9 to beginning: ', testingLLInsertAfterIndex.iterator());
+
+testingLLInsertAfterIndex.insertAfterIndex(5, 21);
+console.log('appended 21 to the end: ', testingLLInsertAfterIndex.iterator());
+
+testingLLInsertAfterIndex.insertAfterIndex(4, 14);
+console.log('appended 14 after 13 (index 4): ', testingLLInsertAfterIndex.iterator());
+
+
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---write splice for a Linked List.---\n');
 console.log('---version two: operates on the input LL.---\n');
 
 let splicer = (list, index, deleteCount, ...rest) => {
-  let counter, max, additions = [...rest];
+  let  counter, currIndex, additions = [...rest];
 
-  console.log({additions});
-
-  if (deleteCount > 0) {
-    counter = index;
-    max = index + deleteCount;
-    while (counter <= max) {
-      list.remove(counter) 
-      counter++;
-    }
-  }
-  if (additions.length > 0) {
+  // adding but not removing
+  if (deleteCount < 1 && additions.length > 0) {
     counter = 0;
-    
+    currIndex = index;
     while (counter < additions.length) {
-      list.insertBefore(index, additions[counter]);
+      list.insertAfterIndex(currIndex, additions[counter]);
       counter++;
+      currIndex++;
     }
   }
+  // removing or replacing
+  else if (deleteCount > 0 ) {
+    counter = 0;
+    while (counter < deleteCount) {
+      list.remove(index); // index stays the same because the next takes over index slot each iteration.
+      counter ++;
+    }
+    counter = additions.length;
+    while (counter > 0) {
+      currIndex = index-1;
+      list.insertAfterIndex(currIndex, additions[counter-1]);
+      counter--;
+      currIndex++;
+    }
+  }
+
   return list;
 }
 
 let myTestList = new LinkedList();
 [1,2,3,4,5,6,7,8,9].map(e => myTestList.append(e));
 
+console.log('starting values: ', myTestList.iterator());
+
 // just add some more in the middle
-splicer(myTestList, 4, 0, 3.2, 3.3, 3.4);
+splicer(myTestList, 2, 0, 3.2, 3.3, 3.4);
 console.log('my TestList should have a new length of 12: ', myTestList.getLength());
+console.log('Linked list with additional values that were spliced in: ', myTestList.iterator());
 
-console.log('here is my Linked list with additional values that were spliced in: ');
-let myCurr = myTestList.head;
-while (myCurr.next) {
-  console.log(myCurr.value);
-  myCurr = myCurr.next;
-}
-console.log(myCurr.value);
+// replace:
+splicer(myTestList, 2, 1, 3.1);
+console.log('replace 3 with 3.1: ', myTestList.iterator());
 
 
-
-console.log('\n---version one: returns an array with sliced result.---\n');
+console.log('\n\n ---------------------------------------------------\n');
+console.log('\n---version one: returns an ARRAY that appends on the added values, and removes the expected values as well.---\n');
 
 let listSplice = (list, index, deleteCount, ...rest) => {
   let outputArr = [];
-  let output = new LinkedList();
 
   let curr = list.head;
 
@@ -92,7 +296,90 @@ let listSplice = (list, index, deleteCount, ...rest) => {
   return outputArr;
 }
 
-console.log(listSplice(myLL3, 4, 1, 111111, 111112));
+console.log('initial values: ', myLL3.iterator());
+
+console.log('after removing 1 and input two at index 4: ', listSplice(myLL3, 4, 1, 111111, 111112));
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---LL Q 5: write a function that concatenates two Linked Lists, as an intersect. Thus, only the dups in the new one.---\n');
+
+let myIntersect = (LL1, LL2) => {
+  let output = new LinkedList();
+  let testSetAll= new Set();
+  let dups = new Set();
+
+  let current = LL1.head;
+  while (current.next) {
+    testSetAll.add(current.value);
+    current = current.next;
+  }
+  testSetAll.add(current.value);
+
+  current = LL2.head;
+  while (current.next) {
+    if (testSetAll.has(current.value) && !(dups.has(current.value))) {
+      testSetAll.add(current.value);
+      dups.add(current.value)
+    }
+    current = current.next;
+  }
+  if (testSetAll.has(current.value) && !(dups.has(current.value))) { 
+    dups.add(current.value);
+  }
+
+  console.log({dups})
+  
+  for (var v of dups.values()) {
+    output.append(v);
+  }
+
+  return (output.length) ? output : null ;
+}
+
+let myLL001 = new LinkedList();
+let myLL002 = new LinkedList();
+
+[1,2,3,4,5,6,7,7,7,6,6,6].map(e => myLL001.append(e));
+[4,5,6,6,7,7,7,8,9,10,11].map(e => myLL002.append(e));
+
+console.log('the iterator over the output LL should be 4,5,6,7: ', myIntersect(myLL001, myLL002).iterator());
+
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---LL Q 4: write a function that concatenates two Linked Lists, as a union. Union means all values, and unlike sets which do not have dups, this will support dups.---\n');
+
+let concatUnion = (LL1, LL2) => {
+  let OutputLL = new LinkedList();
+  let current = LL1.head;
+
+  while(current.next) {
+    OutputLL.append(current.value);
+    current = current.next;
+  }
+  OutputLL.append(current.value);
+
+  current = LL2.head;
+  while(current.next) {
+    OutputLL.append(current.value);
+    current = current.next;
+  }
+  OutputLL.append(current.value);
+
+  return OutputLL;
+}
+
+let myLL01 = new LinkedList();
+let myLL02 = new LinkedList();
+
+[1,2,3,4,5].map(e => myLL01.append(e));
+[4,5,6,7,8].map(e => myLL02.append(e));
+
+
+let output = concatUnion(myLL01, myLL02);
+
+console.log(output.iterator());
+
+
 
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---write a function that finds whether there are any duplicates in a LL. No worries about dup count---\n');

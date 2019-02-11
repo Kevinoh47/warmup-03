@@ -45,7 +45,7 @@ class Set {
 
   values() {
     let results = [];
-    for(var v of Object.keys(this.items)) {
+    for(var v of Object.values(this.items)) {
       results.push(v);
     }
     return results;
@@ -58,6 +58,7 @@ class Set {
   valuesByValues() {
     return Object.values(this.items);
   }
+  
   valuesByEntries() {
     return Object.entries(this.items);
   }

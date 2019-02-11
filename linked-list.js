@@ -182,7 +182,7 @@ class LinkedList {
       return null; // should this throw an error instead?
     }
   }
-  
+
   // insert newValue immediately before the node containing value
   insertBefore(value, newValue) {
     let newNode = new Node(newValue);
@@ -244,6 +244,84 @@ class LinkedList {
       }
     }
     return null;
+  }
+
+  iterator() {
+    let outputArr = [], curr = this.head;
+
+    while(curr.next) {
+      outputArr.push(curr.value);
+      curr = curr.next;
+    }
+    outputArr.push(curr.value);
+
+    return outputArr;
+  }
+
+  // insert before a particular "index"
+  insertAfterIndex(index, newValue) {
+  
+    let counter = 0, current = this.head;
+    let newNode = new Node(newValue);
+    
+    if (index >= this.length) { return null;}
+
+    if (index === -1) {
+      this.head = newNode;
+      newNode.next = current;
+      this.length++;
+      return this;
+    }
+    else if (index >= 0) {
+      while (current.next) {
+        if (counter === index) {
+          newNode.next = current.next;
+          current.next = newNode;
+          this.length++;
+          return this;
+        }
+        current = current.next;
+        counter++;
+      }
+      if (counter === index) {
+        current.next = newNode;
+        this.length++;
+        return this;
+      }
+    }
+
+    return null;
+  }
+
+  splice(index, deleteCount, ...rest) {
+    let  counter = 0, currIndex, additions = [...rest];
+
+    // adding but not removing
+    if (deleteCount < 1 && additions.length > 0) {
+      currIndex = index;
+      while (counter < additions.length) {
+        this.insertAfterIndex(currIndex, additions[counter]);
+        counter++;
+        currIndex++;
+      }
+    }
+    // removing or replacing
+    else if (deleteCount > 0 ) {
+      while (counter < deleteCount) {
+        // index stays the same because the next takes over index slot each iteration.
+        this.remove(index); 
+        counter ++;
+      }
+      counter = additions.length;
+      while (counter > 0) {
+        currIndex = index-1;
+        this.insertAfterIndex(currIndex, additions[counter-1]);
+        counter--;
+        currIndex++;
+      }
+    }
+
+    return this;
   }
 }
 
