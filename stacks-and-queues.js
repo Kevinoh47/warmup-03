@@ -30,23 +30,24 @@ class Queue {
 class Stack {
   constructor () {
     this.top = null;
-    this.linkedList = new linkedList();
+    this.list = new linkedList();
   }
 
   push(value) {
-    this.linkedList.append(value);
+    this.list.append(value);
     this.top = new Node(value);
     return this;
   }
 
   pop() {
-    let popped = this.linkedList.delete();
-    this.top = this.linkedList.tail;
+    let popped = this.list.delete();
+    this.top = this.list.tail;
     return popped;
   }
 
   peek() {
-    return this.linkedList.tail;
+    // console.log('peeking entire stack list: ', this.list.iterator())
+    return this.list.tail;
   }
 
 }

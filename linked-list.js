@@ -149,17 +149,27 @@ class LinkedList {
     let counter = 0;
     let myPrevious;
 
+    if (current === undefined || current === null) {
+      return null;
+    }
+
     if (offset >= 0 && offset <= this.length) {
 
-      // remove the head
-      if (current === this.head && counter === offset) {
+      // remove the head when only head exists
+      if (current === this.head && offset === 0 && this.length === 1) {
+        this.head = null;
+        this.length = 0;
+        return null;
+      }
+      // remove the head from a LL with at least also a tail
+      else if (current === this.head && offset === 0) {
         this.head = current.next;
         current.next = null;
         this.length--;
         return this;
       }
 
-      // remove one from inside
+      // remove an offset node from inside the LL
       while (current.next) {
         if (counter === offset) {
           myPrevious.next = current.next;
@@ -247,6 +257,10 @@ class LinkedList {
   }
 
   iterator() {
+    if (this.head === null) {
+      return null;
+    }
+
     let outputArr = [], curr = this.head;
 
     while(curr.next) {

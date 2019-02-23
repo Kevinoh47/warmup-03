@@ -1,9 +1,11 @@
-/** 
- * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
- */
 'use strict';
 const LinkedList = require('../linked-list');
 const Set = require('../set');
+const { Stack, Queue } = require('../stacks-and-queues');
+
+/** 
+ * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
+ */
 
 let myLL3 = new LinkedList();
 let myinput3 = [444, 777, 555, 999, 888, 1101, 333, 222, 47, 74, 47, 333, 333];
@@ -21,9 +23,250 @@ myinput3.map(e => {
 // console.log('second node: ', myLL3.getSecond());
 // console.log('tail value: ', myLL3.getTailValue());
 
+console.log('----------------------------------------------');
+console.log('testing improvements to linked list class remove method\n')
+
+let myTestLL = new LinkedList();
+
+console.log('remove from null returns null: ', myTestLL.remove(0));
+
+[1,2,3,4,5,6,7,8,9].map(e => myTestLL.append(e));
+
+console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), 'len': myTestLL.getLength()});
+console.log('remove offset larger than length returns null: ', myTestLL.remove(10));
+
+
+let myFunkyTestResults = myTestLL.remove(4);
+console.log('removing offset in the middle (index 4):', myFunkyTestResults.iterator());
+console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), 'len': myTestLL.getLength()});
+
+myFunkyTestResults = myTestLL.remove(0);
+
+console.log('removing head (index 0):', myFunkyTestResults.iterator());
+console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), 'len': myTestLL.getLength()});
+
+myFunkyTestResults = myTestLL.remove(6);
+
+console.log('removing tail (index 6):', myFunkyTestResults.iterator());
+console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), 'len': myTestLL.getLength()});
+
+
+console.log('\n----------------------------------------------');
+console.log('STACKS & QUEUES Q3: use queues to call a list of async (err, data) node functions one after the other\n')
+
+async function urlCaller(err, data) {
+  return (data)
+  //console.log(await a.text().slice(0, 50));
+}
+
+let myUrls = new Queue();
+
+[`www.time.com`, `www.nbcnews.com`, `www.today.com`,`www.nytimes.com`].map(e => myUrls.enqueue(e));
+
+while(myUrls.front) {
+  let currentUrl = myUrls.dequeue();
+  urlCaller( null, currentUrl);
+}
+
+
+console.log('-------------STACKS AND QUEUES----------------\n');
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---STACKS & QUEUES Q2:  write a function called dedup(likedList) that will remove consecutive duplicate values of a linked list (using a stack)---\n');
+console.log('NOTE: I COULD NOT FIGURE THIS OUT. IF I DELETE THE CURRENT IT KILLS THE LOOP BY CAUSING CURRENT.NEXT TO BE NULL, BUT IF I SWITCH CURRENT TO CURRENT.NEXT BEFORE DELETING IT, IT KILLS IT IN A DIFFERENT WAY...')
+
+// let dedupLL = list => {
+//   let myStack = new Stack();
+//   let current = list.head;
+//   let previous = list.head;
+//   let currentOffset = 0;
+
+//   if( !current.next) {
+//     return false;
+//   }
+
+//   while (current.next) {
+//     if (currentOffset > 0 ) {
+//       if (current.value !== previous.value) {
+//         myStack.push(current.value);
+//         previous = current;
+//         current = current.next;
+//       }
+//       else {
+//         current = current.next; // need to iterate before removing current
+//         list.remove(currentOffset); 
+//       }
+//     }
+//     currentOffset++;
+//   }
+//   // tail:
+//   if (current.value !== previous.value) {
+//     myStack.push(current.value);
+//     previous = current;
+//   }
+//   else {
+//     list.remove(currentOffset);
+//   }
+
+//   return list;
+// }
+
+// let duppy = new LinkedList();
+// [1,2,3,4,4,4,5,6,6].map(e => duppy.append(e));
+
+// console.log('before deduping', duppy.iterator());
+
+// let myCurr = duppy.head;
+// while(myCurr.next) {
+//   console.log({myCurr});
+//   myCurr = myCurr.next;
+// }
+// console.log({myCurr});
+
+// dedupLL(duppy);
+// console.log('after deduping', duppy.iterator());
+
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---STACKS & QUEUES Q1:  write a function called reverse(likedList) that will reverse a linked list using a stack---\n');
+
+let reverseLL = list => {
+  let myStack = new Stack();
+  let output = new LinkedList();
+
+  let current = list.head;
+  while(current.next) {
+    myStack.push(current.value);
+    current = current.next;
+  }
+  // tail:
+  myStack.push(current.value);
+
+  while(myStack.top !== null) {
+    output.append(myStack.pop().value);
+  }
+
+  return output;
+}
+
+console.log('list: ', myLL3.iterator());
+let myReversedLL = reverseLL(myLL3);
+console.log('reversed list: ', myReversedLL.iterator());
+
+console.log('efficiency? space: O(3n) === O(n); time: O(2n) === O(n)')
+
+
+console.log('\n\n ---------------------------------------------------\n');
+
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a recursivefunction that prints the fibonacci sequence up to the given number ---\n');
+
+function fibonacciRecurse(desiredLength) { 
+  let results = [1,2];
+
+  function myRecurse(currIdx) {
+
+    if (results.length === desiredLength) {
+      console.log({results});
+      return;
+    }
+    else {
+      results.push(results[currIdx-2] + results[currIdx-1]);
+    
+      console.log({results});
+
+      myRecurse(currIdx + 1);
+    }
+  }
+
+  myRecurse(2);
+  return results;
+}
+
+console.log('recursive fibonacci to 10: ', fibonacciRecurse(10));
+console.log('recursive fibonacci to 15: ', fibonacciRecurse(15));
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a function that  prints the fibonacci sequence up to the given number ---\n');
+
+function fibonacci(num) {
+
+  let index2BehindCurr = 0, index1BehindCurr = 1, results = [1,2]
+
+  for (var i = 0; i < num-2; i++) {
+
+    let nextVal = results[index2BehindCurr] + results[index1BehindCurr];
+  
+    results.push(nextVal);
+
+    index1BehindCurr++;
+    index2BehindCurr++;
+  }
+
+  return results;
+
+}
+
+console.log('fibonacci sequence, 10 places: ', fibonacci(10));
+
+
+  
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a function that recursively counts down to zero from a given number---\n');
+
+function countDown(num) {
+  if (num === 0) {
+    console.log(0);
+    return;
+  }
+  console.log(num);
+  countDown(num-1);
+}
+
+countDown(10);
+
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a function that recursively calculates a factorial sequence---\n');
+
+let factorialRecurse = num => {
+  if (num === 1) {
+    return 1;
+  }
+
+  return num * factorialRecurse(num - 1);
+}
+
+console.log('factorial 3 should be 6: ', factorialRecurse(3));
+console.log('factorial 4 should be 24: ', factorialRecurse(4));
+console.log('factorial 5 should be 120: ', factorialRecurse(5));
+console.log('factorial 6 should be 720: ', factorialRecurse(6));
+
+
 console.log('\n\n ---------------------------------------------------');
 console.log(' ---------------------------------------------------\n');
+console.log('---find the middle of a linked list---\n');
 
+function midFinder(list) {
+  let tortoise = list.head;
+  let hare = list.head;
+  while(hare && hare.next) {
+    tortoise = tortoise.next;
+    hare = (hare.next.next) ? hare.next.next : null;
+  }
+  return tortoise;
+}
+
+let midTest = new LinkedList();
+[1,2,3,4,5,6,7,8,9].map(e => midTest.append(e));
+let midTest2 = new LinkedList();
+[1,2,3,4,5,6,7,8].map(e => midTest2.append(e));
+console.log(midFinder(midTest));
+console.log(midFinder(midTest2));
+console.log(midFinder(myLL3));
+
+console.log('\n\n ---------------------------------------------------');
+console.log(' ---------------------------------------------------\n');
 console.log('---reverse a linked list version2 (preferred).---\n');
 let reverseList = list => {
   var current = list.head;
