@@ -71,40 +71,160 @@ while(myUrls.front) {
 
 console.log('-------------STACKS AND QUEUES----------------\n');
 console.log('\n\n ---------------------------------------------------\n');
-console.log('---STACKS & QUEUES Q2:  write a function called dedup(likedList) that will remove consecutive duplicate values of a linked list (using a stack)---\n');
-console.log('NOTE: I COULD NOT FIGURE THIS OUT. IF I DELETE THE CURRENT IT KILLS THE LOOP BY CAUSING CURRENT.NEXT TO BE NULL, BUT IF I SWITCH CURRENT TO CURRENT.NEXT BEFORE DELETING IT, IT KILLS IT IN A DIFFERENT WAY...')
+console.log('---STACKS & QUEUES Q2:  write a function called dedup(linkedList) that will remove <<<consecutive>>> duplicate values of a linked list (using a stack)---\n');
+console.log('NOTE: REMOVING IN PLACE CAUSED BREAKAGE OF UNDERLYING LIST. POSSIBLY CALLING REMOVE VIA an ASYNC / AWAIT FUNCTION WOULD WORK. INSTEAD, I BUILT AN ARRAY OF OFFSETS TO REMOVE, REVERSED IT, AND REMOVED THEM VIA A MAP FUNCTION...')
 
-// let dedupLL = list => {
+let dedupList = list => {
+  let myStack = new Stack();
+  let curr = list.head;
+  let currentOffset = 0;
+  let offsetsToRemove = [];
+
+  // empty list 
+  if( curr === undefined ) {
+    return false;
+  }
+
+  // just one element means no dups.
+  if( list.length === 1 ) {
+    return list;
+  }
+
+  while (curr && curr.next) {
+    if (currentOffset === 0) {
+      myStack.push(list.head.value);
+    }
+
+    else if (currentOffset === 1) {
+      if (curr.value === list.head.value) {
+        offsetsToRemove.push(currentOffset); 
+      }
+      else {
+        myStack.push(curr.value);
+      }
+    }
+
+    else if (currentOffset > 1 ) {
+
+      let prevVal = myStack.peek().value;
+      if (curr.value !== prevVal) {
+        myStack.push(curr.value);
+      }
+      // found a consecutive duplicate
+      else if (curr.value === prevVal) {
+        offsetsToRemove.push(currentOffset); 
+      }
+    }
+
+    // console.log({'offset': currentOffset, 'curr' : curr});
+
+    currentOffset++;
+    curr = curr.next;
+  }
+
+  // console.log({'current should now be tail': curr});
+
+  // tail (no current.next):
+  if (curr && (curr.next === null || curr.next === undefined)) {
+
+    // console.log({'peeking on tail': myStack.peek()});
+    
+    if ( curr.value === myStack.peek().value ) {
+      offsetsToRemove.push(currentOffset); 
+    }
+  }
+
+  if(offsetsToRemove.length) {
+    offsetsToRemove.reverse().map(e => list.remove(e))
+  }
+
+  return list;
+}
+
+
+let duppy = new LinkedList();
+[1,2,3,4,4,4,5,6,6].map(e => duppy.append(e));
+
+console.log('before deduping', duppy.iterator(), ' duppy head: ', duppy.getHeadValue(), ' duppy tail: ', duppy.getTailValue());
+
+console.log('the list looks correct:');
+
+let myCurr = duppy.head;
+while(myCurr.next) {
+  console.log({myCurr});
+  myCurr = myCurr.next;
+}
+console.log({myCurr});
+console.log('\n\nNow going to run the deduping:\n');
+dedupList(duppy);
+console.log('after deduping we should have 1,2,3,4,5,6:', duppy.iterator());
+
+
+
+//console.log('function not a method, so do not have to do in place.')
+
+// let dedupList = list => {
 //   let myStack = new Stack();
-//   let current = list.head;
-//   let previous = list.head;
+//   let curr = list.head;
 //   let currentOffset = 0;
+//   let offsetsToRemove = [];
 
-//   if( !current.next) {
+  
+//   // empty list 
+//   if( curr === undefined ) {
 //     return false;
 //   }
 
-//   while (current.next) {
-//     if (currentOffset > 0 ) {
-//       if (current.value !== previous.value) {
-//         myStack.push(current.value);
-//         previous = current;
-//         current = current.next;
+//   // just one element means no dups.
+//   if( list.length === 1 ) {
+//     return list;
+//   }
+
+//   while (curr && curr.next) {
+//     if (currentOffset === 0) {
+//       myStack.push(list.head.value);
+//     }
+
+//     else if (currentOffset === 1) {
+//       if (curr.value === list.head.value) {
+//         list.remove(0); // remove previous which is list head
 //       }
 //       else {
-//         current = current.next; // need to iterate before removing current
-//         list.remove(currentOffset); 
+//         myStack.push(curr.value);
 //       }
 //     }
+
+//     else if (currentOffset > 1 ) {
+
+
+//       let prevVal = myStack.peek().value;
+//       if (curr.value !== prevVal) {
+//         myStack.push(curr.value);
+//       }
+//       // found a consecutive duplicate
+//       else if (curr.value === prevVal) {
+//         // remove the previous one, not the current one, since we will need to check the current one too.
+//         list.remove(currentOffset - 1); 
+//       }
+//     }
+
+//     console.log({'offset': currentOffset, 'curr' : curr});
+
 //     currentOffset++;
+//     curr = curr.next;
 //   }
-//   // tail:
-//   if (current.value !== previous.value) {
-//     myStack.push(current.value);
-//     previous = current;
-//   }
-//   else {
-//     list.remove(currentOffset);
+
+//   console.log({'current should now be tail': curr});
+
+//   // tail (no current.next):
+//   if (curr && (curr.next === null || curr.next === undefined)) {
+
+//     console.log({'peeking on tail': myStack.peek()});
+    
+//     if ( curr.value === myStack.peek().value ) {
+//       // We can remove either the tail or the previous one; tail is easier.
+//       list.remove(currentOffset);
+//     }
 //   }
 
 //   return list;
@@ -113,7 +233,9 @@ console.log('NOTE: I COULD NOT FIGURE THIS OUT. IF I DELETE THE CURRENT IT KILLS
 // let duppy = new LinkedList();
 // [1,2,3,4,4,4,5,6,6].map(e => duppy.append(e));
 
-// console.log('before deduping', duppy.iterator());
+// console.log('before deduping', duppy.iterator(), ' duppy head: ', duppy.getHeadValue(), ' duppy tail: ', duppy.getTailValue());
+
+// console.log('the list looks correct:');
 
 // let myCurr = duppy.head;
 // while(myCurr.next) {
@@ -121,9 +243,9 @@ console.log('NOTE: I COULD NOT FIGURE THIS OUT. IF I DELETE THE CURRENT IT KILLS
 //   myCurr = myCurr.next;
 // }
 // console.log({myCurr});
-
-// dedupLL(duppy);
-// console.log('after deduping', duppy.iterator());
+// console.log('\n\nNow going to run the deduping which works partially. It appears that the underlying list is now broken at the last node 4...');
+// dedupList(duppy);
+// console.log('after deduping we should have 1,2,3,4,5,6:', duppy.iterator());
 
 
 console.log('\n\n ---------------------------------------------------\n');
