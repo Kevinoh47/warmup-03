@@ -12,7 +12,74 @@ const util = require('util');
  */
 
 console.log('\n\n----------------------------------------------');
-console.log('Find duplicate values in a linked list: (most efficient approach should be HT)\n')
+console.log('Find intersection of two linked lists: (most efficient approach should be HT):\n')
+
+let people = new LinkedList();
+let dogs = new LinkedList();
+let peopleNoIntersect = new LinkedList();
+let dogsNoIntersect = new LinkedList();
+
+['joe', 'mary', 'skip', 'rosie', 'eva', 'mary'].map(e => people.append(e));
+['spot', 'skip', 'beau', 'eva', 'pasha', 'rosie', 'spot'].map(e => dogs.append(e));
+
+['joe', 'mary', 'skip', 'mary'].map(e => peopleNoIntersect.append(e));
+['spot', 'beau', 'pasha', 'rosie', 'spot'].map(e => dogsNoIntersect.append(e));
+
+function listsIntersection (l1, l2) {
+  let seenAlready = new HashMap(l1.length + l2.length);
+  let newlyAdded, keyValue;
+  let output = [];
+  let curr = l1.head;
+
+  while (curr.next) {
+    seenAlready.add(curr.value, 1);
+    curr = curr.next;
+  }
+  // tail:
+  seenAlready.add(curr.value, 1);
+
+  // now iterate the second list;
+  curr = l2.head;
+  while (curr.next) {
+    newlyAdded =  seenAlready.add(curr.value, 2);
+    if (!newlyAdded) {
+
+      // also have to test that it isn't a dup added from l2...
+      keyValue =  seenAlready.find(curr.value);
+
+      console.log({keyValue});
+
+      if (keyValue === 1) {
+        output.push(curr.value);
+      }
+    }
+    curr = curr.next;
+  }
+  // tail:
+  newlyAdded = seenAlready.add(curr.value, 2);
+  if (!newlyAdded) {
+    // also have to test that it isn't a dup added from l2...
+    keyValue = seenAlready.find(curr.value);
+
+    console.log({keyValue});
+
+    if (keyValue === 1) {
+      output.push(curr.value);
+    }
+  }
+
+  return (output.length) ? output : false;
+}
+
+
+
+console.log({'people and dog name intersection should be skip, rosie, eva not necessarily in that order':  listsIntersection(people, dogs)});
+
+console.log({'no intersection here should return false':  listsIntersection(peopleNoIntersect, dogsNoIntersect)});
+
+
+console.log('\n\n----------------------------------------------');
+console.log('Find duplicate values in a linked list: (most efficient approach should be HT):\n')
 
 let FamilyWithDups = new LinkedList(), FamilyWithOutDups = new LinkedList();
 
@@ -55,6 +122,10 @@ myHash.set('emily', 'daughter');
 console.log({'DUP-KEY ADD SHOULD RETURN FALSE': myHash.add('kevin','test this should fail')});
 myHash.add('jane', 'mother');
 console.log(util.inspect(myHash, {showHidden:false, depth: null}));
+
+console.log({'find method should return dad for kevin': myHash.find('kevin')});
+console.log({'find method should return son for william': myHash.find('william')});
+console.log({'find method should return false for nonexistent': myHash.find('nonexistent')});
 
 console.log('\n\n----------------------------------------------');
 console.log('testing improvements to linked list class remove method\n')
