@@ -2,28 +2,61 @@
 const LinkedList = require('../linked-list');
 const Set = require('../set');
 const { Stack, Queue } = require('../stacks-and-queues');
+const HashMap = require('../hashMap');
+const util = require('util');
+
+
 
 /** 
  * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
  */
 
-let myLL3 = new LinkedList();
-let myinput3 = [444, 777, 555, 999, 888, 1101, 333, 222, 47, 74, 47, 333, 333];
-myinput3.map(e => {
-  // console.log('appending to myLL3: ' , e);
-  myLL3.append(e);
-});
+console.log('\n\n----------------------------------------------');
+console.log('Find duplicate values in a linked list: (most efficient approach should be HT)\n')
 
-// console.log('myLL3 length: ', myLL3.length);
-// console.log('myLL3 head: ', myLL3.head);
-// console.log('myLL3 tail: ', myLL3.tail);
+let FamilyWithDups = new LinkedList(), FamilyWithOutDups = new LinkedList();
 
-// console.log('length: ', myLL3.getLength());
-// console.log('head value: ', myLL3.getHeadValue());
-// console.log('second node: ', myLL3.getSecond());
-// console.log('tail value: ', myLL3.getTailValue());
+['kevin', 'jane', 'william', 'julia', 'emily', 'kevin', 'eva', 'eva', 'beppo', 'emmy', 'beppo'].map(e => FamilyWithDups.append(e));
 
-console.log('----------------------------------------------');
+['kevin', 'jane', 'william', 'julia', 'emily', 'eva', 'beppo', 'emmy'].map(e => FamilyWithOutDups.append(e));
+
+let findDupsEfficiently = list => {
+
+  let alreadySeen = new HashMap(25), current = list.head, addedCurrent, dupList = [];
+  
+
+  while(current.next) {
+    addedCurrent = alreadySeen.add(current.value, 1);
+    if(!addedCurrent) {
+      dupList.push(current.value);
+    }
+    current = current.next;
+  }
+  // tail
+  addedCurrent = alreadySeen.add(current.value, 1);
+  if(!addedCurrent) {
+    dupList.push(current.value);
+  }
+
+  return (dupList.length ? dupList: false);
+}
+
+console.log({'list with dups should return dup values': findDupsEfficiently(FamilyWithDups)});
+console.log({'list without dups should return false': findDupsEfficiently(FamilyWithOutDups)});
+
+console.log('\n\n----------------------------------------------');
+console.log('My New improved HashMap class with add() method, guarranteeing unique keys:\n')
+
+let myHash = new HashMap(25);
+myHash.set('kevin', 'dad');
+myHash.set('william', 'son');
+myHash.set('julia', 'daughter');
+myHash.set('emily', 'daughter');
+console.log({'DUP-KEY ADD SHOULD RETURN FALSE': myHash.add('kevin','test this should fail')});
+myHash.add('jane', 'mother');
+console.log(util.inspect(myHash, {showHidden:false, depth: null}));
+
+console.log('\n\n----------------------------------------------');
 console.log('testing improvements to linked list class remove method\n')
 
 let myTestLL = new LinkedList();
@@ -51,25 +84,25 @@ console.log('removing tail (index 6):', myFunkyTestResults.iterator());
 console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), 'len': myTestLL.getLength()});
 
 
-console.log('\n----------------------------------------------');
-console.log('STACKS & QUEUES Q3: use queues to call a list of async (err, data) node functions one after the other\n')
+// console.log('\n----------------------------------------------');
+// console.log('STACKS & QUEUES Q3: use queues to call a list of async (err, data) node functions one after the other\n')
 
-async function urlCaller(err, data) {
-  return (data)
-  //console.log(await a.text().slice(0, 50));
-}
+// async function urlCaller(err, data) {
+//   return (data)
+//   //console.log(await a.text().slice(0, 50));
+// }
 
-let myUrls = new Queue();
+// let myUrls = new Queue();
 
-[`www.time.com`, `www.nbcnews.com`, `www.today.com`,`www.nytimes.com`].map(e => myUrls.enqueue(e));
+// [`www.time.com`, `www.nbcnews.com`, `www.today.com`,`www.nytimes.com`].map(e => myUrls.enqueue(e));
 
-while(myUrls.front) {
-  let currentUrl = myUrls.dequeue();
-  urlCaller( null, currentUrl);
-}
+// while(myUrls.front) {
+//   let currentUrl = myUrls.dequeue();
+//   urlCaller( null, currentUrl);
+// }
 
 
-console.log('-------------STACKS AND QUEUES----------------\n');
+console.log('\n\n-------------STACKS AND QUEUES----------------\n');
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---STACKS & QUEUES Q2:  write a function called dedup(linkedList) that will remove <<<consecutive>>> duplicate values of a linked list (using a stack)---\n');
 console.log('NOTE: REMOVING IN PLACE CAUSED BREAKAGE OF UNDERLYING LIST. POSSIBLY CALLING REMOVE VIA an ASYNC / AWAIT FUNCTION WOULD WORK. INSTEAD, I BUILT AN ARRAY OF OFFSETS TO REMOVE, REVERSED IT, AND REMOVED THEM VIA A MAP FUNCTION...')
@@ -269,6 +302,22 @@ let reverseLL = list => {
 
   return output;
 }
+
+let myLL3 = new LinkedList();
+let myinput3 = [444, 777, 555, 999, 888, 1101, 333, 222, 47, 74, 47, 333, 333];
+myinput3.map(e => {
+  // console.log('appending to myLL3: ' , e);
+  myLL3.append(e);
+});
+
+// console.log('myLL3 length: ', myLL3.length);
+// console.log('myLL3 head: ', myLL3.head);
+// console.log('myLL3 tail: ', myLL3.tail);
+
+// console.log('length: ', myLL3.getLength());
+// console.log('head value: ', myLL3.getHeadValue());
+// console.log('second node: ', myLL3.getSecond());
+// console.log('tail value: ', myLL3.getTailValue());
 
 console.log('list: ', myLL3.iterator());
 let myReversedLL = reverseLL(myLL3);
