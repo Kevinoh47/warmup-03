@@ -9,6 +9,13 @@ class LinkedList {
     this.length = 0;
   }
 
+  getLength() { return this.length;}
+  getHeadValue() {return this.head.value};
+  getSecond() { 
+    return (this.head.next !== undefined) ? this.head.next : 'false';
+  }
+  getTailValue() {return this.tail.value};
+
   // return the value of the nodethat is k from the END of the linked list
   ll_kth_from_end(k) {
     if (Number.isInteger(k) && k > -1) {
@@ -108,6 +115,7 @@ class LinkedList {
     return this;
   }
 
+  // deletes the tail (e.g. pop).
   delete() {
     let current = (this.head) ? this.head : null;
     let previous;
@@ -131,6 +139,58 @@ class LinkedList {
       this.length--;
     }
     return current;
+  }
+
+   // remove a node from the linked list
+  // Big O for time: O(n)
+  // Big O for space O(1)
+  remove(offset) {
+    let current = this.head;
+    let counter = 0;
+    let myPrevious;
+
+    if (current === undefined || current === null) {
+      return null;
+    }
+
+    if (offset >= 0 && offset <= this.length) {
+
+      // remove the head when only head exists
+      if (current === this.head && offset === 0 && this.length === 1) {
+        this.head = null;
+        this.length = 0;
+        return null;
+      }
+      // remove the head from a LL with at least also a tail
+      else if (current === this.head && offset === 0) {
+        this.head = current.next;
+        current.next = null;
+        this.length--;
+        return this;
+      }
+
+      // remove an offset node from inside the LL
+      while (current.next) {
+        if (counter === offset) {
+          myPrevious.next = current.next;
+          current.next = null;
+          this.length--;
+          return this;
+        }
+        myPrevious = current;
+        current = current.next;
+        counter++;
+      }
+      // removing the tail
+      if (!current.next && counter === offset) {
+        myPrevious.next = null;
+        this.tail = myPrevious;
+        this.length--;
+      }
+      return this;
+    } else {
+      return null; // should this throw an error instead?
+    }
   }
 
   // insert newValue immediately before the node containing value
@@ -194,6 +254,88 @@ class LinkedList {
       }
     }
     return null;
+  }
+
+  iterator() {
+    if (this.head === null) {
+      return null;
+    }
+
+    let outputArr = [], curr = this.head;
+
+    while(curr.next) {
+      outputArr.push(curr.value);
+      curr = curr.next;
+    }
+    outputArr.push(curr.value);
+
+    return outputArr;
+  }
+
+  // insert before a particular "index"
+  insertAfterIndex(index, newValue) {
+  
+    let counter = 0, current = this.head;
+    let newNode = new Node(newValue);
+    
+    if (index >= this.length) { return null;}
+
+    if (index === -1) {
+      this.head = newNode;
+      newNode.next = current;
+      this.length++;
+      return this;
+    }
+    else if (index >= 0) {
+      while (current.next) {
+        if (counter === index) {
+          newNode.next = current.next;
+          current.next = newNode;
+          this.length++;
+          return this;
+        }
+        current = current.next;
+        counter++;
+      }
+      if (counter === index) {
+        current.next = newNode;
+        this.length++;
+        return this;
+      }
+    }
+
+    return null;
+  }
+
+  splice(index, deleteCount, ...rest) {
+    let  counter = 0, currIndex, additions = [...rest];
+
+    // adding but not removing
+    if (deleteCount < 1 && additions.length > 0) {
+      currIndex = index;
+      while (counter < additions.length) {
+        this.insertAfterIndex(currIndex, additions[counter]);
+        counter++;
+        currIndex++;
+      }
+    }
+    // removing or replacing
+    else if (deleteCount > 0 ) {
+      while (counter < deleteCount) {
+        // index stays the same because the next takes over index slot each iteration.
+        this.remove(index); 
+        counter ++;
+      }
+      counter = additions.length;
+      while (counter > 0) {
+        currIndex = index-1;
+        this.insertAfterIndex(currIndex, additions[counter-1]);
+        counter--;
+        currIndex++;
+      }
+    }
+
+    return this;
   }
 }
 
