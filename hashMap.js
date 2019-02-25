@@ -13,6 +13,7 @@ class hashMap {
     return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
   }
 
+  // TODO: update(), remove(), keys()
   // set (or should this be put?) do not protect against duplicate keys.
   set(key, value) {
     let hash = this.hash(key);
@@ -64,6 +65,7 @@ class hashMap {
   }
 
   // find returns the value of the given key
+  // other implementations this method is called get()
   find(key) {
     let hash = this.hash(key);
     let myList = this.map[hash];

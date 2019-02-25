@@ -4,12 +4,59 @@ const Set = require('../set');
 const { Stack, Queue } = require('../stacks-and-queues');
 const HashMap = require('../hashMap');
 const util = require('util');
-
-
+const {BTNode, BSTree} = require('../tree');
 
 /** 
  * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
  */
+
+let CoinToss = () => {
+  return (Math.floor(Math.random() * 2) === 0) ? '\nheads\n' : '\ntails\n';
+}
+console.log(
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss()
+);
+
+console.log('\n\n----------------------------------------------');
+console.log('Exercising new BSTree Binary Search Tree class implementation:\n')
+
+let myTree = new BSTree();
+
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25].map(e => {
+  myTree.insert(e);
+});
+
+console.log({'myTree count should be 14': myTree.getCount()});
+console.log({'myTree root should be 11': myTree.getRoot()});
+
+function printMe(node) {
+  return console.log(node.key);
+}
+
+// ordered traversal:
+myTree.inOrderTraversal(printMe);
+
+let myInOrderKeysArr = myTree.inOrderTraversal();
+console.log({myInOrderKeysArr});
+
+// pre-ordered traversal:
+myTree.preOrderTraversal(printMe);
+
+let myPreOrderKeysArr = myTree.preOrderTraversal();
+console.log({myPreOrderKeysArr});
+
+// post-ordered traversal:
+
+myTree.postOrderTraversal(printMe);
+
+let myPostOrderKeysArr = myTree.postOrderTraversal();
+console.log({myPostOrderKeysArr});
+
+
 
 console.log('\n\n----------------------------------------------');
 console.log('Find intersection of two linked lists: (most efficient approach should be HT):\n')
@@ -20,14 +67,14 @@ let peopleNoIntersect = new LinkedList();
 let dogsNoIntersect = new LinkedList();
 
 ['joe', 'mary', 'skip', 'rosie', 'eva', 'mary'].map(e => people.append(e));
-['spot', 'skip', 'beau', 'eva', 'pasha', 'rosie', 'spot'].map(e => dogs.append(e));
+['spot', 'skip', 'beau', 'eva', 'pasha', 'rosie', 'spot', 'eva'].map(e => dogs.append(e));
 
 ['joe', 'mary', 'skip', 'mary'].map(e => peopleNoIntersect.append(e));
 ['spot', 'beau', 'pasha', 'rosie', 'spot'].map(e => dogsNoIntersect.append(e));
 
 function listsIntersection (l1, l2) {
   let seenAlready = new HashMap(l1.length + l2.length);
-  let newlyAdded, keyValue;
+  let newlyAdded, fromList;
   let output = [];
   let curr = l1.head;
 
@@ -44,12 +91,12 @@ function listsIntersection (l1, l2) {
     newlyAdded =  seenAlready.add(curr.value, 2);
     if (!newlyAdded) {
 
-      // also have to test that it isn't a dup added from l2...
-      keyValue =  seenAlready.find(curr.value);
+      // test that it isn't a dup in l2, and that it hasn't already been added as an intersection
+      fromList =  seenAlready.find(curr.value);
 
-      console.log({keyValue});
+      console.log({fromList});
 
-      if (keyValue === 1) {
+      if (fromList === 1 && !output.includes(curr.value)) {
         output.push(curr.value);
       }
     }
@@ -58,12 +105,13 @@ function listsIntersection (l1, l2) {
   // tail:
   newlyAdded = seenAlready.add(curr.value, 2);
   if (!newlyAdded) {
-    // also have to test that it isn't a dup added from l2...
-    keyValue = seenAlready.find(curr.value);
+    
+    // test that it isn't a dup in l2, and that it hasn't already been added as an intersection
+    fromList = seenAlready.find(curr.value);
 
-    console.log({keyValue});
+    console.log({fromList});
 
-    if (keyValue === 1) {
+    if (fromList === 1 && !output.includes(curr.value)) {
       output.push(curr.value);
     }
   }
