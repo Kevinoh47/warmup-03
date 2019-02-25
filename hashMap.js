@@ -13,6 +13,7 @@ class hashMap {
     return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
   }
 
+  // TODO: update(), remove(), keys()
   // set (or should this be put?) do not protect against duplicate keys.
   set(key, value) {
     let hash = this.hash(key);
@@ -62,13 +63,43 @@ class hashMap {
       return true;
     }
   }
+
+  // find returns the value of the given key
+  // other implementations this method is called get()
+  find(key) {
+    let hash = this.hash(key);
+    let myList = this.map[hash];
+    if (!myList) {
+      return false;
+    }
+    if (myList.length === 1) {
+      return Object.values(myList.head.value)[0];
+    }
+    else if (myList.length > 1) {
+      let curr = myList.head;
+      while(curr.next) {
+
+        if (Object.keys(curr.value)[0] === key) {
+          return Object.values(curr.value)[0];
+        }
+        curr = curr.next;
+      }
+      // tail:
+      if (Object.keys(curr.value)[0] === key) {
+        return Object.values(curr.value)[0];
+      }
+    }
+    return false;
+  }
 }
 
-let myHash = new hashMap(25);
-myHash.set('kevin', 'dad');
-myHash.set('william', 'son');
-myHash.set('julia', 'daughter');
-myHash.set('emily', 'daughter');
-console.log({'DUP-KEY ADD SHOULD RETURN FALSE': myHash.add('kevin','test this should fail')});
-myHash.add('jane', 'mother');
-console.log(util.inspect(myHash, {showHidden:false, depth: null}));
+module.exports = hashMap;
+
+// let myHash = new hashMap(25);
+// myHash.set('kevin', 'dad');
+// myHash.set('william', 'son');
+// myHash.set('julia', 'daughter');
+// myHash.set('emily', 'daughter');
+// console.log({'DUP-KEY ADD SHOULD RETURN FALSE': myHash.add('kevin','test this should fail')});
+// myHash.add('jane', 'mother');
+// console.log(util.inspect(myHash, {showHidden:false, depth: null}));

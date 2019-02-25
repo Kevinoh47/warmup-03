@@ -66,7 +66,7 @@ class BinaryTree {
 
     if (!callback) {callback = _pushResults;}
 
-    else if (callback) {callback = _pushNodeResults;}
+    // else if (callback) {callback = _pushNodeResults;}
 
     let _traversal = (node, callback) => {
 
@@ -244,5 +244,126 @@ class BinarySearchTree extends BinaryTree{
 
 }
 
+class BSTree {
+  constructor() {
+    this.root = null,
+    this.count = 0
+  }
 
-module.exports = {BtNode, BinaryTree, BinarySearchTree};
+  getCount() {
+    return this.count;
+  }
+
+  getRoot() {
+    return this.root;
+  }
+
+  insert(key) {
+    let myNode = new BtNode(key);
+
+    if (this.root === null) {
+      this.root = myNode;
+      this.count = 1;
+    } else {
+    this.insertNode(this.root, myNode);
+    }
+  }
+
+  insertNode(node, newNode) {
+
+    // no dups
+    if (newNode.key === node.key) {
+      return;
+    }
+
+    if (newNode.key < node.key) {
+      if(node.left === null) {
+        node.left = newNode;
+        this.count++;
+        return;
+      } else {
+        return this.insertNode(node.left, newNode);
+      }
+    } else if (newNode.key > node.key) {
+      if (node.right === null) {
+        node.right = newNode;
+        this.count++;
+        return;
+      } else {
+        return this.insertNode(node.right, newNode);
+      }
+    }
+  }
+
+  inOrderTraversal(callback = null) {
+
+    let output = [];
+
+    if (callback === null) {
+      callback = node => output.push(node.key);
+    }
+
+    let _inOrderTraverseNode = (node, callback) => {
+      
+      if (node.left) {   
+        _inOrderTraverseNode(node.left, callback);
+      }
+
+      callback(node);
+
+      if (node.right) {  
+        _inOrderTraverseNode(node.right, callback);
+      }
+
+    }
+
+    _inOrderTraverseNode( this.root, callback);
+
+    return(output.length) ? output : null;
+  }
+
+  preOrderTraversal(callback = null) {
+    let output = [];
+
+    if( callback === null) {
+      callback = node => output.push(node.key);
+    }
+
+    let _preOrderTraverseNode = (node, callback) => {
+
+      callback(node);
+
+      if( node.left !== null ) { _preOrderTraverseNode(node.left, callback)}
+      
+      if( node.right !== null ) { _preOrderTraverseNode(node.right, callback)}
+
+    }
+
+    _preOrderTraverseNode(this.root, callback);
+
+    return (output.length) ? output : null;
+  }
+
+  postOrderTraversal(callback = null) {
+    let output = [];
+
+    if (callback === null) {
+      callback = node => output.push(node.key);
+    }
+
+    let _postOrderTraverseNode = (node, callback) => {
+      if (node.left !== null) { _postOrderTraverseNode(node.left, callback)}
+
+      if (node.right !== null) { _postOrderTraverseNode(node.right, callback)}
+
+      callback(node);
+    }
+
+    _postOrderTraverseNode(this.root, callback);
+
+    return (output.length) ? output : null;
+  }
+  
+}
+
+module.exports = {BtNode, BinaryTree, BinarySearchTree, BSTree};

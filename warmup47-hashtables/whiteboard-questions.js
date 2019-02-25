@@ -4,15 +4,130 @@ const Set = require('../set');
 const { Stack, Queue } = require('../stacks-and-queues');
 const HashMap = require('../hashMap');
 const util = require('util');
-
-
+const {BTNode, BSTree} = require('../tree');
 
 /** 
  * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
  */
 
+let CoinToss = () => {
+  return (Math.floor(Math.random() * 2) === 0) ? '\nheads\n' : '\ntails\n';
+}
+console.log(
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss(), 
+  CoinToss()
+);
+
 console.log('\n\n----------------------------------------------');
-console.log('Find duplicate values in a linked list: (most efficient approach should be HT)\n')
+console.log('Exercising new BSTree Binary Search Tree class implementation:\n')
+
+let myTree = new BSTree();
+
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25].map(e => {
+  myTree.insert(e);
+});
+
+console.log({'myTree count should be 14': myTree.getCount()});
+console.log({'myTree root should be 11': myTree.getRoot()});
+
+function printMe(node) {
+  return console.log(node.key);
+}
+
+// ordered traversal:
+myTree.inOrderTraversal(printMe);
+
+let myInOrderKeysArr = myTree.inOrderTraversal();
+console.log({myInOrderKeysArr});
+
+// pre-ordered traversal:
+myTree.preOrderTraversal(printMe);
+
+let myPreOrderKeysArr = myTree.preOrderTraversal();
+console.log({myPreOrderKeysArr});
+
+// post-ordered traversal:
+
+myTree.postOrderTraversal(printMe);
+
+let myPostOrderKeysArr = myTree.postOrderTraversal();
+console.log({myPostOrderKeysArr});
+
+
+
+console.log('\n\n----------------------------------------------');
+console.log('Find intersection of two linked lists: (most efficient approach should be HT):\n')
+
+let people = new LinkedList();
+let dogs = new LinkedList();
+let peopleNoIntersect = new LinkedList();
+let dogsNoIntersect = new LinkedList();
+
+['joe', 'mary', 'skip', 'rosie', 'eva', 'mary'].map(e => people.append(e));
+['spot', 'skip', 'beau', 'eva', 'pasha', 'rosie', 'spot', 'eva'].map(e => dogs.append(e));
+
+['joe', 'mary', 'skip', 'mary'].map(e => peopleNoIntersect.append(e));
+['spot', 'beau', 'pasha', 'rosie', 'spot'].map(e => dogsNoIntersect.append(e));
+
+function listsIntersection (l1, l2) {
+  let seenAlready = new HashMap(l1.length + l2.length);
+  let newlyAdded, fromList;
+  let output = [];
+  let curr = l1.head;
+
+  while (curr.next) {
+    seenAlready.add(curr.value, 1);
+    curr = curr.next;
+  }
+  // tail:
+  seenAlready.add(curr.value, 1);
+
+  // now iterate the second list;
+  curr = l2.head;
+  while (curr.next) {
+    newlyAdded =  seenAlready.add(curr.value, 2);
+    if (!newlyAdded) {
+
+      // test that it isn't a dup in l2, and that it hasn't already been added as an intersection
+      fromList =  seenAlready.find(curr.value);
+
+      console.log({fromList});
+
+      if (fromList === 1 && !output.includes(curr.value)) {
+        output.push(curr.value);
+      }
+    }
+    curr = curr.next;
+  }
+  // tail:
+  newlyAdded = seenAlready.add(curr.value, 2);
+  if (!newlyAdded) {
+    
+    // test that it isn't a dup in l2, and that it hasn't already been added as an intersection
+    fromList = seenAlready.find(curr.value);
+
+    console.log({fromList});
+
+    if (fromList === 1 && !output.includes(curr.value)) {
+      output.push(curr.value);
+    }
+  }
+
+  return (output.length) ? output : false;
+}
+
+
+
+console.log({'people and dog name intersection should be skip, rosie, eva not necessarily in that order':  listsIntersection(people, dogs)});
+
+console.log({'no intersection here should return false':  listsIntersection(peopleNoIntersect, dogsNoIntersect)});
+
+
+console.log('\n\n----------------------------------------------');
+console.log('Find duplicate values in a linked list: (most efficient approach should be HT):\n')
 
 let FamilyWithDups = new LinkedList(), FamilyWithOutDups = new LinkedList();
 
@@ -55,6 +170,10 @@ myHash.set('emily', 'daughter');
 console.log({'DUP-KEY ADD SHOULD RETURN FALSE': myHash.add('kevin','test this should fail')});
 myHash.add('jane', 'mother');
 console.log(util.inspect(myHash, {showHidden:false, depth: null}));
+
+console.log({'find method should return dad for kevin': myHash.find('kevin')});
+console.log({'find method should return son for william': myHash.find('william')});
+console.log({'find method should return false for nonexistent': myHash.find('nonexistent')});
 
 console.log('\n\n----------------------------------------------');
 console.log('testing improvements to linked list class remove method\n')
