@@ -22,7 +22,101 @@ console.log(
 );
 
 console.log('\n\n----------------------------------------------');
-console.log('Write a function that finds any duplicates between two trees (eg the intersection):\n')
+console.log('BST Q2: Write a function that calculates the depth of a BST:\n');
+
+// let edgeTracker = (current)
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q1: Write a function that calculates the sum of all values in a BST:\n');
+
+let treeSum = bst => {
+
+  // summing treeTotaller is a small refactor over treeVals. No longer need the array reducer. Both ways work.
+  // let treeVals = [];
+  let treeTotaller = 0;
+
+  // traversal
+  function _inOrder(node, callback) {
+    if (node.left) { _inOrder(node.left, callback)};
+
+    callback(node);
+
+    if (node.right) { _inOrder(node.right, callback)};
+
+  }
+
+  //callback
+  function _pushVal(node) {
+    // console.log({'pushing node key': node.key});
+    // treeVals.push(node.key); 
+
+    console.log({'node key': node.key, 'current total' : treeTotaller + node.key});
+    return treeTotaller = treeTotaller + node.key;
+  }
+
+  _inOrder(bst.root, _pushVal);
+
+  // console.log({treeVals});
+  // treeTotaller = treeVals.reduce( (p,c) => {return p + c}, 0);
+
+  return treeTotaller;
+}
+
+let myTreeToSum = new BSTree();
+
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25].map(e => {
+  myTreeToSum.insert(e);
+});
+
+console.log({'root':myTreeToSum.getRoot() , 'count':myTreeToSum.getCount(), ' ordered traversal' : myTreeToSum.inOrderTraversal()});
+
+console.log({'total': treeSum(myTreeToSum)});
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q0: Write a function that finds a value in a BST:\n')
+
+let searchBTree = (btree, value) => {
+
+  function _binSearch(node, value) {
+    if (node === null) {return false;}
+
+    else if (node.key > value) { 
+      return _binSearch(node.left, value);
+    }
+
+    else if (node.key < value) {
+      return _binSearch(node.right, value);
+    }
+
+    else if (node.key === value) {
+      return true;
+    }
+  }
+
+  return _binSearch(btree.root, value);
+}
+
+let myTreeOfNames = new BSTree();
+
+['mel', 'cindy', 'rob', 'bob', 'darren', 'zane', 'geoff', 'sarah', 'quinn', 'yolanda', 'kevin', 'jane', 'william', 'julia', 'emily'].map(e => {
+  myTreeOfNames.insert(e);
+});
+
+console.log({'count' : myTreeOfNames.getCount(), 'root' : myTreeOfNames.getRoot().key});
+
+console.log({'in order traversal': myTreeOfNames.inOrderTraversal()});
+
+
+console.log({'william is here, expect search to return true': searchBTree(myTreeOfNames,'william')});
+console.log({'charlie is not here, expect search to return false': searchBTree(myTreeOfNames,'charlie')});
+
+
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q5: Write a function that finds any duplicates between two trees (eg the intersection):\n')
 
 let myT1 = new BSTree(), myT2 = new BSTree();
 
@@ -86,39 +180,52 @@ let myTree = new BSTree();
   myTree.insert(e);
 });
 
-console.log({'myTree count should be 14': myTree.getCount()});
-console.log({'myTree root should be 11': myTree.getRoot()});
-
+// callback to pass in to traversal methods:
 function printMe(node) {
   return console.log(node.key);
 }
 
-// ordered traversal:
-myTree.inOrderTraversal(printMe);
+console.log({'myTree count should be 14': myTree.getCount()});
+console.log({'myTree root should be 11': myTree.getRoot()});
+console.log('\n ------ \n')
 
+// binary search:
+console.log({'binary search should return true for 14' : myTree.search(14)});
+console.log('\n ------ \n')
+console.log({'binary search should return false for 1477' : myTree.search(1477)});
+console.log('\n ------ \n')
+
+// ordered traversal:
 let myInOrderKeysArr = myTree.inOrderTraversal();
 console.log({myInOrderKeysArr});
+myTree.inOrderTraversal(printMe);
 console.log('\n ------ \n')
 
 // pre-ordered traversal:
-myTree.preOrderTraversal(printMe);
-
 let myPreOrderKeysArr = myTree.preOrderTraversal();
 console.log({myPreOrderKeysArr});
+myTree.preOrderTraversal(printMe);
 console.log('\n ------ \n')
 
 // post-ordered traversal:
-myTree.postOrderTraversal(printMe);
-
 let myPostOrderKeysArr = myTree.postOrderTraversal();
 console.log({myPostOrderKeysArr});
-
+myTree.postOrderTraversal(printMe);
 console.log('\n ------ \n')
-// breadth first traversal:
-myTree.levelOrderTraversal(printMe);
 
+// breadth first traversal:
 let myLevelOrderKeysArr = myTree.levelOrderTraversal();
 console.log({myLevelOrderKeysArr});
+myTree.levelOrderTraversal(printMe);
+
+// maxDepth
+console.log({'maxDepth': myTree.maxDepth()});
+
+myTree.insert(30);
+
+console.log({'maxDepth': myTree.maxDepth()});
+
+
 
 
 
@@ -523,7 +630,28 @@ console.log('efficiency? space: O(3n) === O(n); time: O(2n) === O(n)')
 
 
 console.log('\n\n ---------------------------------------------------\n');
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a recursive function that takes a count and a callback and calls the callback count times ---\n');
 
+function printHello( num ) {
+  console.log(`hello world: ${num}` );
+}
+
+function callbackCounter(count, callback) {
+  
+  while (count > 0) {
+    _myCallbackCaller(count, callback);
+    console.log({'called recursively for count ' : count})
+    count--;
+  }
+  return false;
+
+  function _myCallbackCaller(count, callback) {
+    return callback(count);
+  }
+}
+
+callbackCounter(3, printHello);
 
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---write a recursivefunction that prints the fibonacci sequence up to the given number ---\n');
@@ -533,6 +661,7 @@ function fibonacciRecurse(desiredLength) {
 
   function myRecurse(currIdx) {
 
+    // base case
     if (results.length === desiredLength) {
       console.log({results});
       return;
@@ -545,7 +674,7 @@ function fibonacciRecurse(desiredLength) {
       myRecurse(currIdx + 1);
     }
   }
-
+  // after prepping values for index 0 and 1, we start the recursion with index 2
   myRecurse(2);
   return results;
 }
