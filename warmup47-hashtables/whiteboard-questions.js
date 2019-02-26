@@ -24,8 +24,30 @@ console.log(
 console.log('\n\n----------------------------------------------');
 console.log('BST Q2: Write a function that calculates the depth of a BST:\n');
 
-// let edgeTracker = (current)
+let depthTracker = tree => {
 
+  let _depthTracker = node => {
+    if (node === null) {
+      return 0;
+    }
+    
+    let left = (_depthTracker(node.left));
+    let right = (_depthTracker(node.right));
+
+    console.log({'node key': node.key, 'left depth': left, 'right depth': right});
+
+    return (left > right) ? left + 1 : right + 1;
+  }
+
+  return  _depthTracker(tree.root);
+
+  
+}
+
+let howDeep = new BSTree();
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25,30].map(e=> howDeep.insert(e));
+
+console.log({'depth should be 5': depthTracker(howDeep)});
 
 console.log('\n\n----------------------------------------------');
 console.log('BST Q1: Write a function that calculates the sum of all values in a BST:\n');
