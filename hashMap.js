@@ -10,7 +10,13 @@ class hashMap {
   }
 
   hash(key) {
-    return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
+
+    if (typeof(key) === 'string') {
+      return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
+    } else if (typeof(key) === 'number') {
+      return Math.floor(key) % this.size;
+    }
+
   }
 
   // TODO: update(), remove(), keys()

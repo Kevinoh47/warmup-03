@@ -295,6 +295,31 @@ class BSTree {
     }
   }
 
+  // breadth first
+  levelOrderTraversal(callback = null) {
+
+    let output = [], nodeQ = [];
+
+    if (callback === null) {
+      callback = node => { output.push(node.key);};
+    }
+
+    // start with the root.
+    nodeQ.push(this.root);
+
+    while (nodeQ.length) {
+      let current = nodeQ.shift();
+
+      callback(current);
+
+      if (current.left) { nodeQ.push(current.left); }
+
+      if (current.right) { nodeQ.push(current.right)}
+    }
+
+    return (output.length) ? output : null;
+  }
+
   inOrderTraversal(callback = null) {
 
     let output = [];

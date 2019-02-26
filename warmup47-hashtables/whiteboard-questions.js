@@ -22,6 +22,62 @@ console.log(
 );
 
 console.log('\n\n----------------------------------------------');
+console.log('Write a function that finds any duplicates between two trees (eg the intersection):\n')
+
+let myT1 = new BSTree(), myT2 = new BSTree();
+
+['mel', 'cindy', 'rob', 'bob', 'zane', 'geoff'].map(e => {
+  myT1.insert(e);
+});
+
+['mel', 'cindy', 'bill', 'aly', 'terry', 'geoff'].map(e => {
+  myT2.insert(e);
+});
+
+console.log({'MyT1 count': myT1.getCount(), 'MyT1 root': myT1.getRoot()});
+
+console.log({'MyT2 count': myT2.getCount(), 'MyT2 root': myT2.getRoot()});
+
+
+let treeDups = ( t1, t2) => {
+
+  let seenAlready = new HashMap(50);
+  let myIntersection = [];
+
+  // callback 1
+  let getFirstTreeValues = (node) => {
+    seenAlready.add(node.key, 1);
+  }
+
+  // callback 2
+  let testForIntersections = (node) => {
+    let added = seenAlready.add(node.key, 2);
+
+    if (!added) {
+      myIntersection.push(node.key);
+    }
+  }
+
+  t1.inOrderTraversal(getFirstTreeValues);
+
+  t2.inOrderTraversal(testForIntersections);
+
+  return (myIntersection.length) ? myIntersection : false
+}
+
+const myOrderedT1Output = myT1.inOrderTraversal();
+const myOrderedT2Output = myT2.inOrderTraversal();
+
+console.log({myOrderedT1Output});
+console.log('\n ... \n')
+console.log({myOrderedT2Output});
+
+console.log('\n ... \n')
+let myTreeDups = treeDups (myT1, myT2);
+console.log({'intersection from the two trees should be mel, cindy, and geoff in no particular order' : myTreeDups});
+
+
+console.log('\n\n----------------------------------------------');
 console.log('Exercising new BSTree Binary Search Tree class implementation:\n')
 
 let myTree = new BSTree();
@@ -42,19 +98,27 @@ myTree.inOrderTraversal(printMe);
 
 let myInOrderKeysArr = myTree.inOrderTraversal();
 console.log({myInOrderKeysArr});
+console.log('\n ------ \n')
 
 // pre-ordered traversal:
 myTree.preOrderTraversal(printMe);
 
 let myPreOrderKeysArr = myTree.preOrderTraversal();
 console.log({myPreOrderKeysArr});
+console.log('\n ------ \n')
 
 // post-ordered traversal:
-
 myTree.postOrderTraversal(printMe);
 
 let myPostOrderKeysArr = myTree.postOrderTraversal();
 console.log({myPostOrderKeysArr});
+
+console.log('\n ------ \n')
+// breadth first traversal:
+myTree.levelOrderTraversal(printMe);
+
+let myLevelOrderKeysArr = myTree.levelOrderTraversal();
+console.log({myLevelOrderKeysArr});
 
 
 
@@ -158,6 +222,19 @@ let findDupsEfficiently = list => {
 
 console.log({'list with dups should return dup values': findDupsEfficiently(FamilyWithDups)});
 console.log({'list without dups should return false': findDupsEfficiently(FamilyWithOutDups)});
+
+console.log('\n\n----------------------------------------------');
+console.log('My HashMap class now supports numeric keys:\n')
+
+let myHashie = new HashMap(1);
+
+myHashie.set(6, 'julia');
+myHashie.set(9, 'william');
+myHashie.set(2, 'emily');
+myHashie.set(54.5, 'dad');
+myHashie.set(50.6, 'jane');
+
+console.log(util.inspect(myHashie, {showHidden:false, depth: null}));
 
 console.log('\n\n----------------------------------------------');
 console.log('My New improved HashMap class with add() method, guarranteeing unique keys:\n')
