@@ -356,13 +356,13 @@ class BSTree {
 
     let _inOrderTraverseNode = (node, callback) => {
       
-      if (node.left) {   
+      if (node.left !== null) {   
         _inOrderTraverseNode(node.left, callback);
       }
 
       callback(node);
 
-      if (node.right) {  
+      if (node.right !== null) {  
         _inOrderTraverseNode(node.right, callback);
       }
 

@@ -14,12 +14,15 @@ class hashMap {
     if (typeof(key) === 'string') {
       return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
     } else if (typeof(key) === 'number') {
+
+      // some oddities here... in whiteboard-questions.js the treeUnion function shows dups are being added via add for number keys...
+      console.log({'hashing number':key, 'hash': Math.floor(key) % this.size})
       return Math.floor(key) % this.size;
     }
 
   }
 
-  // TODO: update(), remove(), keys()
+  // TODO: update(), remove()
   // set (or should this be put?) do not protect against duplicate keys.
   set(key, value) {
     let hash = this.hash(key);
@@ -96,6 +99,25 @@ class hashMap {
       }
     }
     return false;
+  }
+
+  keys() {
+    let output = [];
+
+    this.map.map(e => {
+      if (e !== undefined) {
+        let current = e.head;
+
+        while (current.next){ 
+          output.push(Object.keys(current.value)[0]);
+          current = current.next;
+        }
+        //tail
+        output.push(Object.keys(current.value)[0]);
+      }
+    });
+
+    return output;
   }
 }
 
