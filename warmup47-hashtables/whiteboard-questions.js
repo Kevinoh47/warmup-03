@@ -22,6 +22,57 @@ console.log(
 );
 
 console.log('\n\n----------------------------------------------');
+console.log('Hash Table Q1: write a function that finds the first duplicate letter in a string:\n');
+
+function firstDupLetterFinder(string){
+
+  const myInputArr = string.split('');
+
+  let myHash = new HashMap(myInputArr.length);
+
+  let dupsArr = [];
+
+  myInputArr.map(e => {
+    
+  
+    let output = myHash.add(e, 'letter');
+
+    console.log({'letter': e, 'output': output});
+
+    if( !output ) {
+      dupsArr.push(e);
+    }
+  })
+
+  return (dupsArr.length) ? dupsArr[0] : false ;
+}
+
+console.log({'abcdefghijkflmnopm should return f as the first duplicate': firstDupLetterFinder('abcdefghijkflmnopm')});
+console.log({'abcdefghijklmnop should return false because no dups': firstDupLetterFinder('abcdefghijklmnop')});
+
+console.log('\n\n----------------------------------------------');
+console.log('Hash Table Q0: Write a function that will hash a string into a number with a size limit:\n');
+
+let stringHasher = string => {
+  let hashSize = 7;
+  let myHash = string.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % hashSize;
+
+  return myHash;
+}
+
+let myHashable = 'Every Good Boy Deserves Fudge';
+console.log({ 'Every Good Boy Deserves Fudge': stringHasher(myHashable)});
+
+myHashable = 'every good boy deserves fudge';
+console.log({ 'every good boy deserves fudge': stringHasher(myHashable)});
+
+myHashable = 'The quick brown fox jumped over the lazy dog';
+console.log({ 'The quick brown fox jumped over the lazy dog': stringHasher(myHashable)});
+
+myHashable = 'Four score and seven years ago';
+console.log({ 'Four score and seven years ago': stringHasher(myHashable)});
+
+console.log('\n\n----------------------------------------------');
 console.log('BST Q7: Write a function that flattens a bst into a sorted link list:\n');
 
 let tree2list = bstree => {
@@ -533,7 +584,93 @@ console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), '
 // }
 
 
-console.log('\n\n-------------STACKS AND QUEUES----------------\n');
+console.log('\n\n---------------STACKS AND QUEUES-------------------\n');
+console.log('------------------------------------------------\n');
+console.log('---STACKS & QUEUES Q6:  validate a palindrome---\n');
+
+function palindromeChecker(string) {
+
+
+  let myStringArr = string.split('');
+  
+  // TODO strip non-alphaNumerics
+  // let myfilteredArr = myStringArr.filter(e=> {
+
+  //   if (e matches regex for alphanumeric) {
+  //     myfilteredArr.push(e);
+  //   }
+  // })
+
+  // if reverse is not allowed, we could push onto a stack, then populate the reverse array by popping off the stack;
+  let myReverseArr = [...myStringArr].reverse();
+
+  for (var i = 0; i < myStringArr.length; i++) {
+    if (myStringArr[i] !== myReverseArr[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+let goodPalin1 = 'abcdefedcba';
+let badPalin1 =  'abcdeffdcba'
+console.log({'good palindrome should return true': palindromeChecker(goodPalin1)});
+console.log({'bad palindrome should return false': palindromeChecker(badPalin1)});
+
+console.log('\n\n--------------------------------------------\n');
+console.log('---STACKS & QUEUES Q4:  write a function that determines if a string has matching brases using a stack---\n');
+
+let braceChecker = string => {
+  let inputArr = string.split('');
+  let leftBraceCount = 0, rightBraceCount = 0;
+  let braceStack = new Stack();
+
+  inputArr.map(e => {
+    if (e === '[' || e ===']') {
+      braceStack.push(e);
+    }
+  });
+
+  let current;
+  while (braceStack.top) {
+    current = braceStack.peek();
+    
+    if (current.value === '[') {
+      leftBraceCount++;
+    } else if (current.value === ']') { 
+      rightBraceCount++;
+    }
+
+    if (leftBraceCount === rightBraceCount) {
+      leftBraceCount = 0;
+      rightBraceCount = 0
+    }
+
+    console.log({'current value': current.value, 'left':leftBraceCount, 'right': rightBraceCount});
+
+    // in reality, if right brace is ever ahead of left brace, they can't match. End right there. But we are reversing things via stack, so it is the opposite: left brace cannot be ahead of right brace.
+    if (rightBraceCount < leftBraceCount) {
+      return false;
+    }
+
+
+    braceStack.pop();
+  }
+
+  if (leftBraceCount === rightBraceCount) {
+    return true;
+  } else {
+    return false
+  };
+}
+
+let matchingBraces = 'hello[] i[ must][[[]be]]going';
+let unmatched1 = `${matchingBraces}[...`
+let unmatched2 = `${matchingBraces}]...`
+console.log({'matching braces': braceChecker(matchingBraces)});
+console.log({'unmatched extra right': braceChecker(unmatched1)});
+console.log({'unmatched extra left': braceChecker(unmatched2)});
+
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---STACKS & QUEUES Q2:  write a function called dedup(linkedList) that will remove <<<consecutive>>> duplicate values of a linked list (using a stack)---\n');
 console.log('NOTE: REMOVING IN PLACE CAUSED BREAKAGE OF UNDERLYING LIST. POSSIBLY CALLING REMOVE VIA an ASYNC / AWAIT FUNCTION WOULD WORK. INSTEAD, I BUILT AN ARRAY OF OFFSETS TO REMOVE, REVERSED IT, AND REMOVED THEM VIA A MAP FUNCTION...')
@@ -713,7 +850,7 @@ console.log('after deduping we should have 1,2,3,4,5,6:', duppy.iterator());
 
 
 console.log('\n\n ---------------------------------------------------\n');
-console.log('---STACKS & QUEUES Q1:  write a function called reverse(likedList) that will reverse a linked list using a stack---\n');
+console.log('---STACKS & QUEUES Q1:  write a function called reverse(linkedList) that will reverse a linked list using a stack---\n');
 
 let reverseLL = list => {
   let myStack = new Stack();
