@@ -269,6 +269,32 @@ class BSTree {
     }
   }
 
+  search (key) {
+    console.log({'search key' : key});
+
+    let _binarySearch = (node, key) => {
+
+      console.log({'comparing to node-key': (node && node.key) ? node.key :'missing key'});
+
+
+      if (node === null) { return false;} 
+
+      else if (key < node.key) {
+        return _binarySearch(node.left, key);
+      }
+
+      else if (key > node.key) {
+        return _binarySearch(node.right, key);
+      }
+
+      else if (key === node.key) {
+        return true;
+      }
+    }
+
+    return _binarySearch(this.root, key);
+  }
+
   insertNode(node, newNode) {
 
     // no dups
@@ -298,7 +324,7 @@ class BSTree {
   // breadth first
   levelOrderTraversal(callback = null) {
 
-    let output = [], nodeQ = [];
+    let output = [], nodeQ = [], current;
 
     if (callback === null) {
       callback = node => { output.push(node.key);};
@@ -308,13 +334,13 @@ class BSTree {
     nodeQ.push(this.root);
 
     while (nodeQ.length) {
-      let current = nodeQ.shift();
+      current = nodeQ.shift();
 
       callback(current);
 
       if (current.left) { nodeQ.push(current.left); }
 
-      if (current.right) { nodeQ.push(current.right)}
+      if (current.right) { nodeQ.push(current.right); }
     }
 
     return (output.length) ? output : null;
@@ -330,13 +356,13 @@ class BSTree {
 
     let _inOrderTraverseNode = (node, callback) => {
       
-      if (node.left) {   
+      if (node.left !== null) {   
         _inOrderTraverseNode(node.left, callback);
       }
 
       callback(node);
 
-      if (node.right) {  
+      if (node.right !== null) {  
         _inOrderTraverseNode(node.right, callback);
       }
 
@@ -387,6 +413,28 @@ class BSTree {
     _postOrderTraverseNode(this.root, callback);
 
     return (output.length) ? output : null;
+  }
+
+  maxDepth() {
+
+    function _depthFinder(node) {
+
+      //console.log({'depthFinder for node' : node});
+
+      if (node === null) {
+        return 0;
+      }
+      
+      let left = _depthFinder(node.left);
+      let right = _depthFinder(node.right);
+
+      console.log({'_depthFinder node key' : node.key, 'left':left, 'right': right});
+
+      return  (left > right) ? left+1 : right+1;
+    };
+
+    let maxDepth = _depthFinder(this.root);
+    return maxDepth;
   }
   
 }

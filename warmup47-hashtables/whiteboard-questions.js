@@ -22,7 +22,277 @@ console.log(
 );
 
 console.log('\n\n----------------------------------------------');
-console.log('Write a function that finds any duplicates between two trees (eg the intersection):\n')
+console.log('Hash Table Q1: write a function that finds the first duplicate letter in a string:\n');
+
+function firstDupLetterFinder(string){
+
+  const myInputArr = string.split('');
+
+  let myHash = new HashMap(myInputArr.length);
+
+  let dupsArr = [];
+
+  myInputArr.map(e => {
+    
+  
+    let output = myHash.add(e, 'letter');
+
+    console.log({'letter': e, 'output': output});
+
+    if( !output ) {
+      dupsArr.push(e);
+    }
+  })
+
+  return (dupsArr.length) ? dupsArr[0] : false ;
+}
+
+console.log({'abcdefghijkflmnopm should return f as the first duplicate': firstDupLetterFinder('abcdefghijkflmnopm')});
+console.log({'abcdefghijklmnop should return false because no dups': firstDupLetterFinder('abcdefghijklmnop')});
+
+console.log('\n\n----------------------------------------------');
+console.log('Hash Table Q0: Write a function that will hash a string into a number with a size limit:\n');
+
+let stringHasher = string => {
+  let hashSize = 7;
+  let myHash = string.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % hashSize;
+
+  return myHash;
+}
+
+let myHashable = 'Every Good Boy Deserves Fudge';
+console.log({ 'Every Good Boy Deserves Fudge': stringHasher(myHashable)});
+
+myHashable = 'every good boy deserves fudge';
+console.log({ 'every good boy deserves fudge': stringHasher(myHashable)});
+
+myHashable = 'The quick brown fox jumped over the lazy dog';
+console.log({ 'The quick brown fox jumped over the lazy dog': stringHasher(myHashable)});
+
+myHashable = 'Four score and seven years ago';
+console.log({ 'Four score and seven years ago': stringHasher(myHashable)});
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q7: Write a function that flattens a bst into a sorted link list:\n');
+
+let tree2list = bstree => {
+
+  let myHash = new HashMap(bstree.count);
+  let outputArr = [], outputList = new LinkedList();
+
+  let getNodeVal = node => {
+    myHash.add(node.key, 'name');
+  }
+
+  bstree.inOrderTraversal(getNodeVal);
+
+
+  // this gets results but not ordered correctly
+  // myHash.keys().map(e => outputList.append(e));
+
+  myHash.keys().map(e => outputArr.push(e));
+  outputArr.sort();
+  outputArr.map(e=>outputList.append(e));
+
+  return outputList;
+}
+
+let myFancyTree = new BSTree();
+['mel', 'greg', 'paula', 'al', 'jay', 'yolanda', 'nora'].map(e => myFancyTree.insert(e));
+
+//console.log({'my linked list ' : tree2list(myFancyTree)});
+console.log({'my linked list ' : tree2list(myFancyTree).iterator()});
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q4: Write a function that unions two trees:\n');
+
+let treeUnion = (t1, t2) => {
+  let myHashMap = new HashMap(t1.count + t2.count);
+
+  let getNodeVal = (node) => {
+    return myHashMap.add(node.key, 1);
+  }
+
+  t1.inOrderTraversal(getNodeVal);
+
+  t2.inOrderTraversal(getNodeVal);
+
+  return myHashMap.keys();
+}
+
+let unionTree1 = new BSTree();
+let unionTree2 = new BSTree();
+let unionTree3 = new BSTree();
+let unionTree4 = new BSTree();
+
+[11, 7, 17, 4, 9, 23, 15].map(e => unionTree1.insert(e));
+[11, 8, 17, 3, 5, 9, 22, 15].map(e => unionTree2.insert(e));
+
+['mel', 'gabe', 'nora', 'rachel', 'zach', 'anna'].map(e => unionTree3.insert(e));
+['mel', 'bob', 'nora', 'quinn', 'zach', 'carl'].map(e => unionTree4.insert(e));
+
+console.log({'treeUnion should output 3,4,5,7,8,9,11,15,17,22,23, not necessarily in that order': treeUnion(unionTree1, unionTree2)});
+
+console.log('\n ... \n');
+
+console.log({'treeUnion should output mel, bob, gabe, nora, rachel, quinn, zach, carl, anna not necessarily in that order': treeUnion(unionTree3, unionTree4)});
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q2: Write a function that calculates the depth of a BST:\n');
+
+// this one works and is more elegant but how it works eludes me...
+let depthTrackerBottomUp = tree => {
+
+  let _depthTracker = node => {
+
+    // leaf node returns 0, and we count up from there...
+    if (node === null) {
+      return 0;
+    }
+    
+    let left = (_depthTracker(node.left));
+    let right = (_depthTracker(node.right));
+
+    console.log({'BOTTOM UP: node key': node.key, 'left depth': left, 'right depth': right});
+
+    return (left > right) ? left + 1 : right + 1;
+  }
+
+  return  _depthTracker(tree.root);
+}
+
+// I can follow the logic on this version.
+let depthTrackerTopDown = tree => {
+  
+  // if root is the only node, just return 0;
+  if (!tree.root || (!tree.root.left && !tree.root.right)) {
+    return 0;
+  }
+
+  // if any child nodes exist we at least have a depth of 1.
+  let maxDepth = 1;
+
+  let _depthTrackerTD = (node, d) => {
+
+    let leftDepth = d;
+    let rightDepth = d;
+
+    if (node.left !== null) { _depthTrackerTD(node.left, d+1)}
+
+    if (node.right !== null) { _depthTrackerTD(node.right, d+1)}
+
+    console.log({'TOP DOWN: node key': node.key, 'left depth': leftDepth, 'right depth': rightDepth});
+
+    let currentMaxDepth = (leftDepth > rightDepth) ? leftDepth : rightDepth;
+
+    if (currentMaxDepth > maxDepth) { maxDepth = currentMaxDepth;}
+  }
+
+  _depthTrackerTD(tree.root, maxDepth);
+
+  return maxDepth ;
+}
+
+let howDeep = new BSTree();
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25,30].map(e=> howDeep.insert(e));
+
+console.log({'BOTTOM UP - depth should be 5': depthTrackerBottomUp(howDeep)});
+
+console.log('\n --- \n');
+
+console.log({'TOP DOWN - depth should be 5': depthTrackerTopDown(howDeep)});
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q1: Write a function that calculates the sum of all values in a BST:\n');
+
+let treeSum = bst => {
+
+  // summing treeTotaller is a small refactor over treeVals. No longer need the array reducer. Both ways work.
+  // let treeVals = [];
+  let treeTotaller = 0;
+
+  // traversal
+  function _inOrder(node, callback) {
+    if (node.left) { _inOrder(node.left, callback)};
+
+    callback(node);
+
+    if (node.right) { _inOrder(node.right, callback)};
+
+  }
+
+  //callback
+  function _pushVal(node) {
+    // console.log({'pushing node key': node.key});
+    // treeVals.push(node.key); 
+
+    console.log({'node key': node.key, 'current total' : treeTotaller + node.key});
+    return treeTotaller = treeTotaller + node.key;
+  }
+
+  _inOrder(bst.root, _pushVal);
+
+  // console.log({treeVals});
+  // treeTotaller = treeVals.reduce( (p,c) => {return p + c}, 0);
+
+  return treeTotaller;
+}
+
+let myTreeToSum = new BSTree();
+
+[11,7,15,5,3,9,8,10,13,12,14,20,18,25].map(e => {
+  myTreeToSum.insert(e);
+});
+
+console.log({'root':myTreeToSum.getRoot() , 'count':myTreeToSum.getCount(), ' ordered traversal' : myTreeToSum.inOrderTraversal()});
+
+console.log({'total': treeSum(myTreeToSum)});
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q0: Write a function that finds a value in a BST:\n')
+
+let searchBTree = (btree, value) => {
+
+  function _binSearch(node, value) {
+    if (node === null) {return false;}
+
+    else if (node.key > value) { 
+      return _binSearch(node.left, value);
+    }
+
+    else if (node.key < value) {
+      return _binSearch(node.right, value);
+    }
+
+    else if (node.key === value) {
+      return true;
+    }
+  }
+
+  return _binSearch(btree.root, value);
+}
+
+let myTreeOfNames = new BSTree();
+
+['mel', 'cindy', 'rob', 'bob', 'darren', 'zane', 'geoff', 'sarah', 'quinn', 'yolanda', 'kevin', 'jane', 'william', 'julia', 'emily'].map(e => {
+  myTreeOfNames.insert(e);
+});
+
+console.log({'count' : myTreeOfNames.getCount(), 'root' : myTreeOfNames.getRoot().key});
+
+console.log({'in order traversal': myTreeOfNames.inOrderTraversal()});
+
+
+console.log({'william is here, expect search to return true': searchBTree(myTreeOfNames,'william')});
+console.log({'charlie is not here, expect search to return false': searchBTree(myTreeOfNames,'charlie')});
+
+
+
+
+console.log('\n\n----------------------------------------------');
+console.log('BST Q5: Write a function that finds any duplicates between two trees (eg the intersection):\n')
 
 let myT1 = new BSTree(), myT2 = new BSTree();
 
@@ -86,39 +356,52 @@ let myTree = new BSTree();
   myTree.insert(e);
 });
 
-console.log({'myTree count should be 14': myTree.getCount()});
-console.log({'myTree root should be 11': myTree.getRoot()});
-
+// callback to pass in to traversal methods:
 function printMe(node) {
   return console.log(node.key);
 }
 
-// ordered traversal:
-myTree.inOrderTraversal(printMe);
+console.log({'myTree count should be 14': myTree.getCount()});
+console.log({'myTree root should be 11': myTree.getRoot()});
+console.log('\n ------ \n')
 
+// binary search:
+console.log({'binary search should return true for 14' : myTree.search(14)});
+console.log('\n ------ \n')
+console.log({'binary search should return false for 1477' : myTree.search(1477)});
+console.log('\n ------ \n')
+
+// ordered traversal:
 let myInOrderKeysArr = myTree.inOrderTraversal();
 console.log({myInOrderKeysArr});
+myTree.inOrderTraversal(printMe);
 console.log('\n ------ \n')
 
 // pre-ordered traversal:
-myTree.preOrderTraversal(printMe);
-
 let myPreOrderKeysArr = myTree.preOrderTraversal();
 console.log({myPreOrderKeysArr});
+myTree.preOrderTraversal(printMe);
 console.log('\n ------ \n')
 
 // post-ordered traversal:
-myTree.postOrderTraversal(printMe);
-
 let myPostOrderKeysArr = myTree.postOrderTraversal();
 console.log({myPostOrderKeysArr});
-
+myTree.postOrderTraversal(printMe);
 console.log('\n ------ \n')
-// breadth first traversal:
-myTree.levelOrderTraversal(printMe);
 
+// breadth first traversal:
 let myLevelOrderKeysArr = myTree.levelOrderTraversal();
 console.log({myLevelOrderKeysArr});
+myTree.levelOrderTraversal(printMe);
+
+// maxDepth
+console.log({'maxDepth': myTree.maxDepth()});
+
+myTree.insert(30);
+
+console.log({'maxDepth': myTree.maxDepth()});
+
+
 
 
 
@@ -236,6 +519,8 @@ myHashie.set(50.6, 'jane');
 
 console.log(util.inspect(myHashie, {showHidden:false, depth: null}));
 
+console.log({'calling keys method should return all keys': myHashie.keys()});
+
 console.log('\n\n----------------------------------------------');
 console.log('My New improved HashMap class with add() method, guarranteeing unique keys:\n')
 
@@ -251,6 +536,7 @@ console.log(util.inspect(myHash, {showHidden:false, depth: null}));
 console.log({'find method should return dad for kevin': myHash.find('kevin')});
 console.log({'find method should return son for william': myHash.find('william')});
 console.log({'find method should return false for nonexistent': myHash.find('nonexistent')});
+console.log({'calling keys method should return all keys': myHash.keys()});
 
 console.log('\n\n----------------------------------------------');
 console.log('testing improvements to linked list class remove method\n')
@@ -298,7 +584,93 @@ console.log({'head': myTestLL.getHeadValue(), 'tail': myTestLL.getTailValue(), '
 // }
 
 
-console.log('\n\n-------------STACKS AND QUEUES----------------\n');
+console.log('\n\n---------------STACKS AND QUEUES-------------------\n');
+console.log('------------------------------------------------\n');
+console.log('---STACKS & QUEUES Q6:  validate a palindrome---\n');
+
+function palindromeChecker(string) {
+
+
+  let myStringArr = string.split('');
+  
+  // TODO strip non-alphaNumerics
+  // let myfilteredArr = myStringArr.filter(e=> {
+
+  //   if (e matches regex for alphanumeric) {
+  //     myfilteredArr.push(e);
+  //   }
+  // })
+
+  // if reverse is not allowed, we could push onto a stack, then populate the reverse array by popping off the stack;
+  let myReverseArr = [...myStringArr].reverse();
+
+  for (var i = 0; i < myStringArr.length; i++) {
+    if (myStringArr[i] !== myReverseArr[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+let goodPalin1 = 'abcdefedcba';
+let badPalin1 =  'abcdeffdcba'
+console.log({'good palindrome should return true': palindromeChecker(goodPalin1)});
+console.log({'bad palindrome should return false': palindromeChecker(badPalin1)});
+
+console.log('\n\n--------------------------------------------\n');
+console.log('---STACKS & QUEUES Q4:  write a function that determines if a string has matching brases using a stack---\n');
+
+let braceChecker = string => {
+  let inputArr = string.split('');
+  let leftBraceCount = 0, rightBraceCount = 0;
+  let braceStack = new Stack();
+
+  inputArr.map(e => {
+    if (e === '[' || e ===']') {
+      braceStack.push(e);
+    }
+  });
+
+  let current;
+  while (braceStack.top) {
+    current = braceStack.peek();
+    
+    if (current.value === '[') {
+      leftBraceCount++;
+    } else if (current.value === ']') { 
+      rightBraceCount++;
+    }
+
+    if (leftBraceCount === rightBraceCount) {
+      leftBraceCount = 0;
+      rightBraceCount = 0
+    }
+
+    console.log({'current value': current.value, 'left':leftBraceCount, 'right': rightBraceCount});
+
+    // in reality, if right brace is ever ahead of left brace, they can't match. End right there. But we are reversing things via stack, so it is the opposite: left brace cannot be ahead of right brace.
+    if (rightBraceCount < leftBraceCount) {
+      return false;
+    }
+
+
+    braceStack.pop();
+  }
+
+  if (leftBraceCount === rightBraceCount) {
+    return true;
+  } else {
+    return false
+  };
+}
+
+let matchingBraces = 'hello[] i[ must][[[]be]]going';
+let unmatched1 = `${matchingBraces}[...`
+let unmatched2 = `${matchingBraces}]...`
+console.log({'matching braces': braceChecker(matchingBraces)});
+console.log({'unmatched extra right': braceChecker(unmatched1)});
+console.log({'unmatched extra left': braceChecker(unmatched2)});
+
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---STACKS & QUEUES Q2:  write a function called dedup(linkedList) that will remove <<<consecutive>>> duplicate values of a linked list (using a stack)---\n');
 console.log('NOTE: REMOVING IN PLACE CAUSED BREAKAGE OF UNDERLYING LIST. POSSIBLY CALLING REMOVE VIA an ASYNC / AWAIT FUNCTION WOULD WORK. INSTEAD, I BUILT AN ARRAY OF OFFSETS TO REMOVE, REVERSED IT, AND REMOVED THEM VIA A MAP FUNCTION...')
@@ -478,7 +850,7 @@ console.log('after deduping we should have 1,2,3,4,5,6:', duppy.iterator());
 
 
 console.log('\n\n ---------------------------------------------------\n');
-console.log('---STACKS & QUEUES Q1:  write a function called reverse(likedList) that will reverse a linked list using a stack---\n');
+console.log('---STACKS & QUEUES Q1:  write a function called reverse(linkedList) that will reverse a linked list using a stack---\n');
 
 let reverseLL = list => {
   let myStack = new Stack();
@@ -523,7 +895,28 @@ console.log('efficiency? space: O(3n) === O(n); time: O(2n) === O(n)')
 
 
 console.log('\n\n ---------------------------------------------------\n');
+console.log('\n\n ---------------------------------------------------\n');
+console.log('---write a recursive function that takes a count and a callback and calls the callback count times ---\n');
 
+function printHello( num ) {
+  console.log(`hello world: ${num}` );
+}
+
+function callbackCounter(count, callback) {
+  
+  while (count > 0) {
+    _myCallbackCaller(count, callback);
+    console.log({'called recursively for count ' : count})
+    count--;
+  }
+  return false;
+
+  function _myCallbackCaller(count, callback) {
+    return callback(count);
+  }
+}
+
+callbackCounter(3, printHello);
 
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---write a recursivefunction that prints the fibonacci sequence up to the given number ---\n');
@@ -533,6 +926,7 @@ function fibonacciRecurse(desiredLength) {
 
   function myRecurse(currIdx) {
 
+    // base case
     if (results.length === desiredLength) {
       console.log({results});
       return;
@@ -545,7 +939,7 @@ function fibonacciRecurse(desiredLength) {
       myRecurse(currIdx + 1);
     }
   }
-
+  // after prepping values for index 0 and 1, we start the recursion with index 2
   myRecurse(2);
   return results;
 }
