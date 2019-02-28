@@ -10,16 +10,16 @@ const {BTNode, BSTree} = require('../tree');
  * https://github.com/codefellows-seattle-javascript-401n7/class/blob/master/reference/WHITEBOARD-PRACTICE.md
  */
 
-let CoinToss = () => {
-  return (Math.floor(Math.random() * 2) === 0) ? '\nheads\n' : '\ntails\n';
-}
-console.log(
-  CoinToss(), 
-  CoinToss(), 
-  CoinToss(), 
-  CoinToss(), 
-  CoinToss()
-);
+// let CoinToss = () => {
+//   return (Math.floor(Math.random() * 2) === 0) ? '\nheads\n' : '\ntails\n';
+// }
+// console.log(
+//   CoinToss(), 
+//   CoinToss(), 
+//   CoinToss(), 
+//   CoinToss(), 
+//   CoinToss()
+// );
 
 console.log('\n\n----------------------------------------------');
 console.log('Hash Table Q1: write a function that finds the first duplicate letter in a string:\n');
@@ -1352,6 +1352,7 @@ console.log('the iterator over the output LL should be 4,5,6,7: ', myIntersect(m
 console.log('\n\n ---------------------------------------------------\n');
 console.log('---LL Q 4: write a function that concatenates two Linked Lists, as a union. Union means all values, and unlike sets which do not have dups, this will support dups.---\n');
 
+/**NOTE maybe a better approach would have been to get to the tail of LL 1, and set this.next = LL2.head. worth trying! */
 let concatUnion = (LL1, LL2) => {
   let OutputLL = new LinkedList();
   let current = LL1.head;
@@ -1491,18 +1492,34 @@ console.log('---write a function that prints the values of a linked list in an a
 
 let toArrayRecursively = list => {
 
-let myRecurse = (node, myArr) => {
+  let myRecurse = (node, myArr) => {
 
-  myArr.push(node.value);
+    myArr.push(node.value);
 
-  if(node.next) {
-    myRecurse(node.next, myArr)
+    if(node.next) {
+      myRecurse(node.next, myArr)
+    }
   }
+
+  let results = [];
+  myRecurse(list.head, results);
+  return results;
 }
 
-let results = [];
-myRecurse(list.head, results);
-return results;
+// slight refactor
+let toArrayRecursively2 = list => {
+  let results = [];
+  let myRecurse = (node) => {
+
+    results.push(node.value);
+
+    if(node.next) {
+      myRecurse(node.next)
+    }
+  }
+
+  myRecurse(list.head);
+  return results;
 }
 
 let toArrayWhileLoop = list => {
@@ -1521,6 +1538,10 @@ let toArrayWhileLoop = list => {
 console.log('\n recurse over the linked list: ');
  let myLLArr1 = toArrayRecursively(myLL3);
  console.log({myLLArr1});
+
+ console.log('\n recurse2 over the linked list: ');
+ let myLLArr1a = toArrayRecursively2(myLL3);
+ console.log({myLLArr1a});
 
  console.log('\n while loop for the linked list: ');
  let myLLArr2 = toArrayWhileLoop(myLL3);
@@ -1766,9 +1787,12 @@ let loop = (count, callback) => {
   }
   return sum;
 }
+
+
 let doubled = num => {return num * 2};
 let evensOnly = num => {return (num % 2 === 0) ? num : 0}
 let oddsOnly = num => {return (num % 2 === 0) ? 0 : num}
+
 let doubler = loop(20, doubled);
 let addEvensOnly = loop(20, evensOnly);
 let addOddsOnly = loop(20, oddsOnly);
