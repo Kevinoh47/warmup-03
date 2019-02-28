@@ -269,32 +269,6 @@ class BSTree {
     }
   }
 
-  search (key) {
-    console.log({'search key' : key});
-
-    let _binarySearch = (node, key) => {
-
-      console.log({'comparing to node-key': (node && node.key) ? node.key :'missing key'});
-
-
-      if (node === null) { return false;} 
-
-      else if (key < node.key) {
-        return _binarySearch(node.left, key);
-      }
-
-      else if (key > node.key) {
-        return _binarySearch(node.right, key);
-      }
-
-      else if (key === node.key) {
-        return true;
-      }
-    }
-
-    return _binarySearch(this.root, key);
-  }
-
   insertNode(node, newNode) {
 
     // no dups
@@ -319,6 +293,32 @@ class BSTree {
         return this.insertNode(node.right, newNode);
       }
     }
+  }
+
+  search (key) {
+    console.log({'search key' : key});
+
+    let _binarySearch = (node, key) => {
+
+      console.log({'comparing to node-key': (node && node.key) ? node.key :'missing key'});
+
+
+      if (node === null) { return false;} 
+
+      else if (key < node.key) {
+        return _binarySearch(node.left, key);
+      }
+
+      else if (key > node.key) {
+        return _binarySearch(node.right, key);
+      }
+
+      else if (key === node.key) {
+        return true;
+      }
+    }
+
+    return _binarySearch(this.root, key);
   }
 
   // breadth first
