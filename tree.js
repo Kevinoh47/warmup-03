@@ -258,6 +258,39 @@ class BSTree {
     return this.root;
   }
 
+  // see getMin() for a refactored approach
+  getMaxValue() {
+    let currMax = this.getRoot().key;
+
+    function _findMax(node) {
+      if (node) {
+        if (node.key > currMax){
+          currMax = node.key
+        }
+        _findMax((node.right));
+      }
+    }
+
+    _findMax(this.getRoot());
+
+    return currMax;
+  }
+
+  getMinValue() {
+
+    function _findMin(node) {
+
+      if(node.left) {
+        return _findMin(node.left);
+      }
+      else {
+        return node.key;
+      }
+    }
+
+    return _findMin(this.getRoot());
+  }
+
   insert(key) {
     let myNode = new BtNode(key);
 
@@ -354,18 +387,33 @@ class BSTree {
       callback = node => output.push(node.key);
     }
 
-    let _inOrderTraverseNode = (node, callback) => {
+    // refactored below
+    // let _inOrderTraverseNode = (node, callback) => {
       
-      if (node.left !== null) {   
+    //   if (node.left !== null) {   
+    //     console.log({'_inOrderTN checking left, node' : node.key, 'node-left':node.left.key })
+    //     _inOrderTraverseNode(node.left, callback);
+    //   }
+
+    //   console.log({'callback for node': node.key})
+    //   callback(node);
+
+    //   if (node.right !== null) {  
+    //     console.log({'_inOrderTN checking right, node' : node.key, 'node-right':node.right.key })
+
+    //     _inOrderTraverseNode(node.right, callback);
+    //   }
+
+    // }
+
+    // refactored versiom
+    let _inOrderTraverseNode = (node, callback) => {
+      console.log({'processing node' : (node) ? node.key : 'empty'});
+      if (node) {
         _inOrderTraverseNode(node.left, callback);
-      }
-
-      callback(node);
-
-      if (node.right !== null) {  
+        callback(node);
         _inOrderTraverseNode(node.right, callback);
       }
-
     }
 
     _inOrderTraverseNode( this.root, callback);

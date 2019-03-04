@@ -1,6 +1,6 @@
 'use strict';
 
-const util = require('util');
+// const util = require('util');
 const LinkedList = require('./linked-list');
 
 class hashMap {
@@ -16,7 +16,7 @@ class hashMap {
     } else if (typeof(key) === 'number') {
 
       // some oddities here... in whiteboard-questions.js the treeUnion function shows dups are being added via add for number keys...
-      console.log({'hashing number':key, 'hash': Math.floor(key) % this.size})
+      // console.log({'hashing number':key, 'hash': Math.floor(key) % this.size})
       return Math.floor(key) % this.size;
     }
 
@@ -49,7 +49,7 @@ class hashMap {
 
       let curr = this.map[hash].head;
 
-      console.log({'HEAD': curr});
+      console.log({'HEAD': curr.value});
 
   
       while(curr.next) {

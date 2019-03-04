@@ -40,7 +40,9 @@ class Stack {
   }
 
   pop() {
-    let popped = this.list.delete();
+    //let popped = this.list.delete();
+    let popped = this.peek();
+    this.list.delete();
     this.top = this.list.tail;
     return popped;
   }
