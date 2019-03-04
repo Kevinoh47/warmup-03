@@ -132,7 +132,6 @@ console.log('\n\n----------------------------------------------');
 console.log(' write a function that takes a tree and determines the level of each node.\n');
 
 // let levelChecker = tree => {
-
 // }
 
 console.log('\n\n----------------------------------------------');
@@ -188,22 +187,17 @@ let nodeParent = (tree, target) => {
 
   let _search = node => {
 
-    // console.log({currentParent});
-
     if (node) {
       if ( target === node.key ) {
-        // console.log({'parent': currentParent, 'child': target });
         return {'parent': currentParent, 'child': target };
       }
 
       else if ( target < node.key) {
-        // console.log({'recurse for n.l. ':  node.left });
         currentParent = node.key;
         return _search( node.left );
       }
 
       else if ( target > node.key) {
-        // console.log({'recurse for n.r. ':  node.left });
         currentParent = node.key;
         return _search ( node.right );
       }
@@ -255,12 +249,6 @@ let treeNodeParents = (tree, value) => {
 
   _nodeParent(tree.root);
 
-  // Object.entries(keysWithParents.map).map(e => {
-  //   if (e && e.length) {
-  //     //console.log(e);
-  //   }
-  // });
-
   return keysWithParents.map;
 }
 
@@ -268,6 +256,7 @@ console.log({'tree in order traversal': myBSTree.inOrderTraversal()});
 
 console.log('\n --- \n');
 console.log('nodes & parents');
+
 let outputArr = treeNodeParents(myBSTree);
 console.log({outputArr});
 
@@ -275,7 +264,6 @@ console.log('\n --- iterating output via Object.values --- \n');
 
 Object.values(outputArr).map(e => {
 
-  // console.log(e);
   let current = e.head;
 
   while (current && current.next) {

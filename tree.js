@@ -467,8 +467,6 @@ class BSTree {
 
     function _depthFinder(node) {
 
-      //console.log({'depthFinder for node' : node});
-
       if (node === null) {
         return 0;
       }
