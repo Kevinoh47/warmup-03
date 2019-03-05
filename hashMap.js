@@ -10,14 +10,17 @@ class hashMap {
   }
 
   hash(key) {
-
+    let customDivisor = this.size;
     if (typeof(key) === 'string') {
-      return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % this.size;
+      return key.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0) % customDivisor;
     } else if (typeof(key) === 'number') {
 
-      // some oddities here... in whiteboard-questions.js the treeUnion function shows dups are being added via add for number keys...
-      // console.log({'hashing number':key, 'hash': Math.floor(key) % this.size})
-      return Math.floor(key) % this.size;
+      // decrease collisions by making the divisor odd:
+      if (customDivisor % 2 == 0) { customDivisor = customDivisor - 1};
+
+      // console.log({'NUMBER BEING HASHED': key, "SIZE":this.size,  "DIVISOR": customDivisor, "HASH" : Math.floor(key) % customDivisor});
+
+      return Math.floor(key) % customDivisor;
     }
 
   }
@@ -37,24 +40,22 @@ class hashMap {
   // if we use add rather than set/put, i think we guarrantee uniqueness of keys.
   add(key, value) {
     let hash = this.hash(key);
-    if (!this.map[hash]) { 
+
+    if (this.map[hash] === undefined) { 
       this.map[hash] = new LinkedList(); 
       this.map[hash].append({[key]:value});
       return true;
     }
-    // test the list for the key and return false if the key exists, otherwise add key:value
-    if (this.map[hash].length) {
+    // test the list at the hash index for the key. Return false if the key exists, otherwise add key:value
+    else { 
 
-      console.log({'COLLISION':key});
+      console.log({'COLLISION':key, "HASH": hash});
 
       let curr = this.map[hash].head;
-
-      console.log({'HEAD': curr.value});
-
   
       while(curr.next) {
-
-        if (Object.keys(curr.value)[0] === key) {
+        // NOTICE: uses '==' rather than '===' so that Object.keys which are stringified can equate to actual numbers keys.
+        if (Object.keys(curr.value)[0] == key) {
           console.log({'DUPLICATE KEY WILL NOT BE ADDED': key, 'VAL': value})
           return false;
         }
@@ -62,8 +63,9 @@ class hashMap {
       }
 
       // tail
-      if (Object.keys(curr.value)[0] === key) {
-        console.log({'DUPLICATE KEY WILL NOT BE ADDED': key, 'VAL': value})
+      // NOTICE: uses '==' rather than '===' so that Object.keys which are stringified can equate to actual numbers keys.
+      if (Object.keys(curr.value)[0] == key) {
+        console.log({'DUPLICATE KEY WILL NOT BE ADDED': key, 'SOURCE': value})
         return false;
       }
 
