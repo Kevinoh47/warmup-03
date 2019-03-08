@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/Kevinoh47/warmup-03#readme",
   "dependencies": {
+    "boom": "^7.3.0",
+    "cryptiles": "^4.1.3",
     "eslint": "^5.10.0",
     "faker": "^4.1.0",
+    "hoek": "^6.1.2",
     "jest": "^23.6.0",
     "merge": "^1.2.1"
   }
