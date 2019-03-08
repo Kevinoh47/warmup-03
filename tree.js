@@ -333,7 +333,7 @@ class BSTree {
 
     let _binarySearch = (node, key) => {
 
-      console.log({'comparing to node-key': (node && node.key) ? node.key :'missing key'});
+      console.log({'comparing to node-key': (node && node.key) ? node.key : 'missing key'});
 
 
       if (node === null) { return false;} 
@@ -476,6 +476,7 @@ class BSTree {
 
       console.log({'_depthFinder node key' : node.key, 'left':left, 'right': right});
 
+      // another way: return Math.max(left, right) + 1;
       return  (left > right) ? left+1 : right+1;
     };
 

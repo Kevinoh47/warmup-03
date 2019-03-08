@@ -21,6 +21,50 @@ console.log('\n---\n');
 console.log({'iterating the test list': myTestList.iterator()});
 console.log('\n---\n');
 
+console.log('\n---\n');
+// FINAL EXAM QUESTION #2: Reverse a linked list in place.
+
+function listReverser(list) {
+  let previous = null;
+  let temp;
+  let current = list.head, newTail = list.head;
+
+  if (list.length === 1) { return list;}
+
+  while (current.next) {
+
+    // temp holds the current node 
+    temp = {...current}; // need to make sure I get a true copy, not a reference, as current is changed below.
+    
+    // reverse the current node's next to equal the previous node
+    current.next = previous;
+
+    // now set previous to current node, so it will be ready next iteration.
+    previous = current;
+
+    // loop
+    current = temp.next; 
+  }
+  // tail:
+  current.next = previous;
+  list.head = current;
+  list.tail = newTail;
+  
+  return list;
+}
+
+let myTestList2 = new LinkedList();
+
+[10,20,30,40,50,60,70,80,90,100,110].map(e => myTestList2.append(e));
+
+console.log({'Iterate List': myTestList2.iterator()});
+
+listReverser(myTestList2);
+
+console.log({'now iterate reversed List': myTestList2.iterator()});
+
+
+
 // write splice for linked list
 /* splice takes a starting index, and a count, and ...rest for inputs
 0 count inputs without removing. 

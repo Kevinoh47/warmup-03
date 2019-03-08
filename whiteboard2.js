@@ -135,7 +135,7 @@ console.log(' write a function that takes a tree and determines the level of eac
 // }
 
 console.log('\n\n----------------------------------------------');
-console.log(' write a function that takes an input a tree and min/max and returns either min or max value of a tree.\n');
+console.log(' write a function that takes an input a Binary Search tree and min/max and returns either min or max value of a tree.\n');
 
 function minMaxFinder (tree, minOrMax)  {
 
@@ -148,8 +148,6 @@ function minMaxFinder (tree, minOrMax)  {
   if (minOrMax === 'min') {
 
     function _findMin(node) {
-
-
       if ( !node.left ) {
         return node;
       } else {
@@ -161,7 +159,6 @@ function minMaxFinder (tree, minOrMax)  {
 
   } else {
     function _findMax(node) {
-
       if ( !node.right ) {
         return node;
       } else {
@@ -220,9 +217,30 @@ console.log({'target 47 immediate parent should be false because it does not exi
 );
 
 console.log('\n\n----------------------------------------------');
+console.log(' write a function that takes a tree and discovers the height.\n');
+
+// https://khan4019.github.io/front-end-Interview-Questions/bst.html
+
+function treeHeight(tree) {
+
+  function _height(node){
+    if(!node) return 0;
+    var leftHeight = _height(node.left);
+    var rightHeight = _height(node.right);
+  
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  return _height(tree.root);
+}
+
+console.log({'treeHeight': treeHeight(myBSTree)});
+
+
+console.log('\n\n----------------------------------------------');
 console.log(' write a function that takes a tree and prints the nodes with parents.\n');
 
-let treeNodeParents = (tree, value) => {
+let treeNodeParents = (tree) => {
 
   let keysWithParents = new HashMap(2);
 
@@ -356,7 +374,7 @@ console.log({'MIN': myWeightTree.getMinValue(), 'MAX': myWeightTree.getMaxValue(
 
 console.log('\n\n');
 console.log({'LEAFWEIGHT 11 SHOULD RETURN 2': leafWeight(myWeightTree, 11)});
-console.log({'LEAFWEIGHT 20 SHOULD RETURN 7': leafWeight(myWeightTree, 22)});
+console.log({'LEAFWEIGHT 20 SHOULD RETURN 7': leafWeight(myWeightTree, 20)});
 console.log({'LEAFWEIGHT 22 SHOULD RETURN 9': leafWeight(myWeightTree, 22)});
 console.log({'LEAFWEIGHT 10 SHOULD RETURN FALSE': leafWeight(myWeightTree, 10)});
 
@@ -395,6 +413,6 @@ let leafWeight2 = (tree, targetWeight) => {
 
 console.log('\n\n');
 console.log({'LEAFWEIGHT 11 SHOULD RETURN 2': leafWeight2(myWeightTree, 11)});
-console.log({'LEAFWEIGHT 20 SHOULD RETURN 7': leafWeight2(myWeightTree, 22)});
+console.log({'LEAFWEIGHT 20 SHOULD RETURN 7': leafWeight2(myWeightTree, 20)});
 console.log({'LEAFWEIGHT 22 SHOULD RETURN 9': leafWeight2(myWeightTree, 22)});
 console.log({'LEAFWEIGHT 10 SHOULD RETURN FALSE': leafWeight2(myWeightTree, 10)});
