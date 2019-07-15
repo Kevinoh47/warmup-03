@@ -16,7 +16,7 @@ class LinkedList {
   }
   getTailValue() {return this.tail.value};
 
-  // return the value of the nodethat is k from the END of the linked list
+  // return the value of the node that is k from the END of the linked list
   ll_kth_from_end(k) {
     if (Number.isInteger(k) && k > -1) {
       let current = this.head;
@@ -199,6 +199,8 @@ class LinkedList {
     let current = this.head;
     let previous;
 
+    // TODO handle list with only head
+
     while(current.next) {
       if (current.value === value){
         // head 
@@ -233,6 +235,8 @@ class LinkedList {
   insertAfter(value, newValue) {
     let newNode = new Node(newValue);
     let current = this.head;
+
+    // TODO handle list with just head
 
     while(current.next) {
       if (current.value === value){
@@ -272,11 +276,16 @@ class LinkedList {
     return outputArr;
   }
 
-  // insert before a particular "index"
+  // insert after a particular "index"
   insertAfterIndex(index, newValue) {
   
+    console.log({'1-attempting to insertAfterIndex ': index, 'value': newValue});
+
     let counter = 0, current = this.head;
     let newNode = new Node(newValue);
+
+    console.log ({newNode});
+    console.log ({'list length':this.length});
     
     if (index >= this.length) { return null;}
 
@@ -287,6 +296,9 @@ class LinkedList {
       return this;
     }
     else if (index >= 0) {
+
+      console.log({'2-attempting to insertAfterIndex ': index, 'value': newValue});
+
       while (current.next) {
         if (counter === index) {
           newNode.next = current.next;
